@@ -1,0 +1,447 @@
+import { buildExpandedTest } from '../testBuilder'
+
+const webCat = {
+  id: 'cat-web-development',
+  name: 'Web Development',
+  slug: 'web-development',
+  description: 'Frontend and backend web technologies: HTML, CSS, JavaScript, React, and Node.js.',
+  color: '#0284c7',
+  icon: 'Globe',
+}
+
+export const htmlDeepTest = buildExpandedTest(
+  'html-deep',
+  'html-test',
+  'HTML Deep-Dive Test',
+  'Semantic HTML5, forms, accessibility attributes, metadata, media embedding, and browser rendering essentials.',
+  'Master the building blocks of the web. This test covers semantic document structure, forms and input validation, ARIA roles vs semantic HTML, metadata for SEO and social sharing, and performance-critical loading attributes.',
+  webCat,
+  'html',
+  'intermediate',
+  30,
+  [
+    {
+      topic: 'Semantic HTML – Document Structure',
+      prompt: 'Which HTML5 element represents a standalone piece of content that could be independently distributed (e.g. a blog post, forum post, or news article)?',
+      options: ['<section>', '<article>', '<aside>', '<div>'],
+      correct: 1,
+      explanation:
+        '`<article>` represents self-contained content that makes sense in isolation and could be syndicated (e.g. RSS). `<section>` is a thematic grouping of content that is part of a larger whole. `<aside>` represents tangentially related content.',
+      hint: 'Think about content that works as a standalone piece outside the page.',
+      difficulty: 'beginner',
+      tags: ['Semantic HTML', 'Article', 'Document Structure'],
+    },
+    {
+      topic: 'Semantic HTML – Navigation',
+      prompt: 'What is the correct semantic element for a block of primary navigation links on a webpage?',
+      options: ['<div class="navigation">', '<menu>', '<nav>', '<ul>'],
+      correct: 2,
+      explanation:
+        '`<nav>` is the HTML5 landmark element specifically for groups of navigation links. Using `<nav>` allows assistive technologies (screen readers) to identify and navigate to the site\'s navigation sections directly.',
+      hint: 'HTML5 has a dedicated element for navigation landmarks.',
+      difficulty: 'beginner',
+      tags: ['Semantic HTML', 'Navigation', 'Accessibility'],
+    },
+    {
+      topic: 'Heading Hierarchy',
+      prompt: 'Why should a page have only one `<h1>` element, and what is the correct way to structure headings?',
+      options: [
+        'There is no restriction; multiple h1 tags improve SEO',
+        'A single h1 defines the main topic of the page (important for SEO and screen readers); headings should follow a hierarchical nesting order (h1 → h2 → h3) without skipping levels',
+        'h1 is deprecated in HTML5; use h2 for main headings',
+        'Multiple h1 elements are fine for accessibility',
+      ],
+      correct: 1,
+      explanation:
+        'One `<h1>` per page establishes a clear document outline. Assistive technologies rely on heading hierarchy to help users navigate content. Skipping levels (e.g. h1 → h4) creates confusion for screen reader users and harms SEO.',
+      hint: 'Think about document outline and assistive technology navigation.',
+      difficulty: 'beginner',
+      tags: ['Headings', 'SEO', 'Accessibility'],
+    },
+    {
+      topic: 'Forms – Input Types',
+      prompt: 'What advantage does `<input type="email">` provide over `<input type="text">` for email fields?',
+      options: [
+        'It encrypts the email value before submission',
+        'It provides built-in browser validation (format check), shows an email-specific keyboard on mobile, and communicates semantic intent to assistive technologies',
+        'It automatically sends a verification email',
+        'It is identical to type="text" in all browsers',
+      ],
+      correct: 1,
+      explanation:
+        'Semantic input types like `email`, `tel`, `url`, `number`, and `date` provide free built-in browser validation, trigger device-appropriate keyboards on mobile (improving UX), and communicate the field\'s semantic purpose to assistive technologies and autofill engines.',
+      hint: 'Consider mobile UX and free browser-level validation.',
+      difficulty: 'beginner',
+      tags: ['Forms', 'Input Types', 'Mobile UX'],
+    },
+    {
+      topic: 'Forms – label association',
+      prompt: 'Which approach correctly associates a `<label>` with an `<input>` for accessibility?',
+      options: [
+        '<label>Name</label><input type="text" name="name">',
+        '<label for="name">Name</label><input type="text" id="name">',
+        '<label><input type="text"> Name</label> — wrapping is wrong',
+        'Labels do not need to be associated with inputs',
+      ],
+      correct: 1,
+      explanation:
+        'Two valid methods: (1) `for`/`id` pairing: `<label for="name">` links to `<input id="name">` via matching attributes, (2) implicit wrapping: `<label>Name <input></label>`. Both create a programmatic association that screen readers announce. The `for`/`id` approach also enlarges the click target to the label text.',
+      hint: 'The for attribute of label must match the id attribute of the input.',
+      difficulty: 'beginner',
+      tags: ['Forms', 'Label', 'Accessibility'],
+    },
+    {
+      topic: 'Forms – required and novalidate',
+      prompt: 'How does the `required` attribute on an input affect form submission?',
+      options: [
+        'The form submits normally; required only adds visual styling',
+        'The browser blocks form submission and displays a validation message if the required field is empty',
+        'required is a JavaScript property, not an HTML attribute',
+        'required marks the field as optional',
+      ],
+      correct: 1,
+      explanation:
+        'The `required` HTML attribute triggers built-in browser validation before submission. If a `required` field is empty, the browser prevents the `submit` event from firing and displays a localised validation message. Add `novalidate` to the `<form>` element to disable browser validation when you handle it with JavaScript.',
+      hint: 'Browser native validation can prevent form submission automatically.',
+      difficulty: 'beginner',
+      tags: ['Forms', 'Validation', 'required'],
+    },
+    {
+      topic: 'Image – alt text',
+      prompt: 'When should an image have an empty alt attribute (`alt=""`)?',
+      options: [
+        'Never – all images must have descriptive alt text',
+        'When the image is decorative and adds no informational value; empty alt signals assistive technologies to skip the image',
+        'When the image has a very long description',
+        'When the image is larger than 100KB',
+      ],
+      correct: 1,
+      explanation:
+        'Decorative images (background flourishes, icons duplicated by adjacent text) should have `alt=""` so screen readers skip them, avoiding noise. Meaningful images must have descriptive alt text. Omitting alt entirely causes some screen readers to announce the filename.',
+      hint: 'Decorative images should be invisible to screen readers.',
+      difficulty: 'beginner',
+      tags: ['Images', 'alt text', 'Accessibility'],
+    },
+    {
+      topic: 'Image – loading="lazy"',
+      prompt: 'What does the `loading="lazy"` attribute on an `<img>` element do?',
+      options: [
+        'Compresses the image to lazy quality',
+        'Defers loading the image until it is near the viewport, reducing initial page load time and bandwidth',
+        'Loads the image in a separate browser thread',
+        'Only loads the image if JavaScript is enabled',
+      ],
+      correct: 1,
+      explanation:
+        '`loading="lazy"` instructs the browser to defer loading images that are not immediately visible in the viewport. Images load as the user scrolls near them. This is a native browser optimisation that reduces initial payload and improves Core Web Vitals (LCP, TTI).',
+      hint: 'Think about reducing initial page load by deferring off-screen images.',
+      difficulty: 'intermediate',
+      tags: ['Images', 'Performance', 'lazy loading'],
+    },
+    {
+      topic: 'Meta – viewport',
+      prompt: 'Why is the `<meta name="viewport" content="width=device-width, initial-scale=1">` tag essential for mobile web pages?',
+      options: [
+        'It prevents the page from being indexed by search engines',
+        'It instructs mobile browsers to render the page at the device\'s actual pixel width rather than a zoomed-out desktop emulation, enabling responsive design to work correctly',
+        'It sets the minimum font size to 16px',
+        'It disables pinch-to-zoom on all devices',
+      ],
+      correct: 1,
+      explanation:
+        'Without the viewport meta tag, mobile browsers render pages at a virtual viewport (typically 980px wide) and scale them down to fit the screen. Setting `width=device-width` lets CSS media queries target the actual device width, making responsive layouts work as intended.',
+      hint: 'Without this tag, your responsive CSS breakpoints will not work on mobile.',
+      difficulty: 'intermediate',
+      tags: ['Responsive Design', 'Viewport', 'Mobile'],
+    },
+    {
+      topic: 'Meta – SEO essentials',
+      prompt: 'Which meta tag provides a summary description that can appear in search engine results pages (SERPs)?',
+      options: [
+        '<meta name="keywords" content="...">',
+        '<meta name="description" content="...">',
+        '<meta name="author" content="...">',
+        '<meta name="robots" content="...">',
+      ],
+      correct: 1,
+      explanation:
+        '`<meta name="description">` provides a brief, accurate summary that search engines often display as the snippet below the page title in SERPs. While not a direct ranking signal, a compelling description improves click-through rate (CTR). `keywords` is ignored by modern search engines.',
+      hint: 'This is the snippet text shown below your page title in Google results.',
+      difficulty: 'beginner',
+      tags: ['SEO', 'Meta Tags', 'SERP'],
+    },
+    {
+      topic: 'Open Graph meta tags',
+      prompt: 'What are Open Graph meta tags and why are they important?',
+      options: [
+        'They define page animations for social media platforms',
+        'They control how page content appears when shared on social platforms (Facebook, LinkedIn, Twitter) – specifying the title, description, and preview image',
+        'They are required for HTTPS to work',
+        'They block scrapers from reading page content',
+      ],
+      correct: 1,
+      explanation:
+        'Open Graph protocol (`og:title`, `og:description`, `og:image`, `og:url`) controls how pages are represented when shared on social media. Without them, platforms use guessed content which often looks poor. Twitter also has `twitter:card` meta tags for its own card preview system.',
+      hint: 'Think about how link previews look when shared on LinkedIn or Twitter.',
+      difficulty: 'intermediate',
+      tags: ['Open Graph', 'Social Sharing', 'Meta Tags'],
+    },
+    {
+      topic: 'ARIA – Roles',
+      prompt: 'When is it correct to add `role="button"` to a `<div>` element?',
+      options: [
+        'Always, to improve semantics for all clickable divs',
+        'Only when you cannot use a real `<button>` element and the div has full keyboard interaction (Enter/Space key handling) and visual focus indicator implemented',
+        'Never; role="button" is always invalid',
+        'Whenever you style a div to look like a button with CSS',
+      ],
+      correct: 1,
+      explanation:
+        'The first rule of ARIA: prefer native semantic HTML (`<button>`) over ARIA roles. If you must use a `<div>` as a button, you must also add `tabindex="0"` for focusability, handle keyboard events (Enter/Space), and maintain a visible focus indicator – all of which `<button>` provides for free.',
+      hint: '"If you can use a native HTML element... prefer that."',
+      difficulty: 'intermediate',
+      tags: ['ARIA', 'Accessibility', 'Buttons'],
+    },
+    {
+      topic: 'ARIA – aria-label vs aria-labelledby',
+      prompt: 'What is the difference between `aria-label` and `aria-labelledby` attributes?',
+      options: [
+        'They are identical; use either one',
+        '`aria-label` provides an inline text string as the accessible name; `aria-labelledby` references the id of another element whose text becomes the accessible name',
+        '`aria-labelledby` provides an inline text string; `aria-label` references another element',
+        '`aria-label` is for buttons; `aria-labelledby` is for forms only',
+      ],
+      correct: 1,
+      explanation:
+        '`aria-label="Search"` directly specifies the accessible name as a literal string. `aria-labelledby="heading-id"` references another element\'s id, using its text content as the name. `aria-labelledby` is preferred when a visible label element already exists on the page.',
+      hint: 'One provides the label text inline; the other points to text already in the DOM.',
+      difficulty: 'intermediate',
+      tags: ['ARIA', 'Labelling', 'Accessibility'],
+    },
+    {
+      topic: 'Tables – semantic markup',
+      prompt: 'Which table elements improve the accessibility and semantic structure of data tables?',
+      options: [
+        'Only <td> and <tr> are needed for accessible tables',
+        '<caption>, <thead>, <tbody>, <tfoot>, and <th scope="col/row"> provide structure, descriptions, and cell relationships that assistive technologies can convey to users',
+        'Tables should never be used in modern HTML; use CSS Grid instead',
+        '<table class="accessible"> is sufficient',
+      ],
+      correct: 1,
+      explanation:
+        '`<caption>` describes the table\'s purpose. `<thead>`/`<tbody>`/`<tfoot>` group rows semantically. `<th>` (with `scope="col"` or `scope="row"`) identifies header cells and their relationship to data cells, allowing screen readers to announce "Column: Salary" as users navigate cells.',
+      hint: 'Screen readers can correlate data cells with their headers using scope.',
+      difficulty: 'intermediate',
+      tags: ['Tables', 'Semantics', 'Accessibility'],
+    },
+    {
+      topic: 'HTML – script loading',
+      prompt: 'What is the difference between `<script defer>` and `<script async>` attributes?',
+      options: [
+        'Both are identical; they load scripts in the background',
+        '`defer` downloads the script in parallel and executes it after the HTML is fully parsed (in order); `async` downloads in parallel but executes immediately when downloaded (potentially out of order)',
+        '`async` always executes after defer scripts',
+        '`defer` is only for external scripts; `async` works on inline scripts too',
+      ],
+      correct: 1,
+      explanation:
+        'Both `defer` and `async` prevent render-blocking by downloading scripts in parallel with HTML parsing. `defer` scripts execute after parsing completes, in document order – ideal for dependent scripts. `async` scripts execute as soon as downloaded, in unpredictable order – suitable for independent scripts like analytics.',
+      hint: 'Consider order-dependent scripts vs independent tracking pixels.',
+      difficulty: 'intermediate',
+      tags: ['Performance', 'Script Loading', 'defer', 'async'],
+    },
+    {
+      topic: 'HTML – link preload',
+      prompt: 'What does `<link rel="preload" as="font" href="font.woff2" crossorigin>` accomplish?',
+      options: [
+        'It loads the font only after the page fully renders',
+        'It declaratively tells the browser to fetch the font resource at high priority before it is discovered in CSS, reducing flash of invisible text (FOIT)',
+        'It caches the font permanently in localStorage',
+        'It embeds the font bytes inline in the HTML',
+      ],
+      correct: 1,
+      explanation:
+        '`<link rel="preload">` instructs the browser to start fetching a resource at high priority during HTML parsing, before it would normally be discovered (e.g. a font referenced in CSS). For fonts, this reduces the gap between HTML render and font availability, improving perceived text rendering.',
+      hint: 'Preload pulls high-priority resources into the download queue early.',
+      difficulty: 'advanced',
+      tags: ['Performance', 'Preload', 'Fonts', 'Core Web Vitals'],
+    },
+    {
+      topic: 'HTML – picture element',
+      prompt: 'What problem does the `<picture>` element solve that `<img srcset>` cannot?',
+      options: [
+        'picture supports animated images; img does not',
+        'picture allows art direction: serving entirely different images based on media queries (e.g. cropped portrait on mobile vs wide landscape on desktop)',
+        'picture loads images without network requests',
+        'picture is simply a styled container for img elements',
+      ],
+      correct: 1,
+      explanation:
+        '`<img srcset>` allows the browser to choose among images of different resolutions for the same content. `<picture>` with `<source media="...">` allows art direction: serving fundamentally different compositions (crops, aspect ratios) at different breakpoints, going beyond resolution-switching.',
+      hint: 'Art direction means a different image, not just a different resolution of the same one.',
+      difficulty: 'advanced',
+      tags: ['Responsive Images', 'Picture', 'Art Direction'],
+    },
+    {
+      topic: 'HTML – dialog element',
+      prompt: 'What accessibility benefit does the native `<dialog>` element provide over a custom modal div?',
+      options: [
+        'No benefit; it is purely a styling shortcut',
+        'The native dialog manages focus trapping, provides a backdrop, handles Escape key closing, and exposes correct ARIA roles automatically without custom JavaScript',
+        'dialog prevents scrolling on the background page automatically',
+        'dialog elements are always full-screen overlays',
+      ],
+      correct: 1,
+      explanation:
+        'The native `<dialog>` element provides built-in: focus trapping (Tab cycles within the dialog), `::backdrop` pseudo-element for dimming, keyboard Escape to close (via `closedBy="any"`), and implicit `role="dialog"` with `aria-modal` semantics. Custom modal divs must implement all of this manually.',
+      hint: 'Native beats custom for free accessibility and keyboard behaviour.',
+      difficulty: 'advanced',
+      tags: ['Dialog', 'Modal', 'Accessibility'],
+    },
+    {
+      topic: 'HTML – data attributes',
+      prompt: 'What is the primary use case for HTML5 `data-*` attributes?',
+      options: [
+        'Storing backend database IDs for server-side processing',
+        'Embedding custom private data in HTML elements that JavaScript can read without requiring hidden inputs or extra DOM queries',
+        'Controlling CSS styling through data-attributes exclusively',
+        'Making elements accessible to screen readers',
+      ],
+      correct: 1,
+      explanation:
+        '`data-*` attributes allow you to store arbitrary custom data directly on HTML elements (`data-user-id="42"`, `data-state="active"`) that JavaScript can access via `element.dataset.userId`. They keep markup semantically descriptive without misusing class/id attributes for data storage.',
+      hint: 'dataset.* in JavaScript reads data-* attributes from the element.',
+      difficulty: 'intermediate',
+      tags: ['data-attributes', 'JavaScript', 'DOM'],
+    },
+    {
+      topic: 'HTML – contenteditable',
+      prompt: 'What is `contenteditable="true"` and what is a key accessibility concern when using it?',
+      options: [
+        'Makes an element hidden; no accessibility concerns',
+        'Allows the element\'s text to be directly edited by the user in the browser; must have a visible label and appropriate ARIA role (e.g. role="textbox" aria-multiline="true") for screen readers to understand it',
+        'Automatically syncs content to a server database',
+        'contenteditable is deprecated in HTML5',
+      ],
+      correct: 1,
+      explanation:
+        '`contenteditable` turns any element into an editable region. Screen readers need to understand its purpose: add `role="textbox"` (or similar) and `aria-label` to communicate its meaning. Always provide a visible label and handle keyboard navigation carefully.',
+      hint: 'contenteditable needs ARIA augmentation since it lacks native form element semantics.',
+      difficulty: 'advanced',
+      tags: ['contenteditable', 'ARIA', 'Accessibility'],
+    },
+    {
+      topic: 'HTML – iframe security',
+      prompt: 'What does the `sandbox` attribute on an `<iframe>` do?',
+      options: [
+        'Displays a loading spinner while the iframe loads',
+        'Applies restrictions to the iframe content: prevents scripts from running, form submission, popups, and other capabilities unless explicitly re-enabled with specific sandbox token values',
+        'Loads iframe content in incognito mode',
+        'Requires the embedded URL to use HTTPS',
+      ],
+      correct: 1,
+      explanation:
+        'The `sandbox` attribute on `<iframe>` applies a strict set of restrictions to the embedded document by default (no scripts, no forms, no popups, no same-origin access). Capabilities are selectively re-enabled by adding tokens like `allow-scripts`, `allow-forms`, or `allow-same-origin`.',
+      hint: 'Sandbox enables defense-in-depth for embedded third-party content.',
+      difficulty: 'advanced',
+      tags: ['iframe', 'Security', 'sandbox'],
+    },
+    {
+      topic: 'HTML – output element',
+      prompt: 'What is the semantic purpose of the `<output>` element?',
+      options: [
+        'It renders command-line output in monospace font',
+        'It represents the result of a calculation or user action, semantically associated with one or more form controls',
+        'It is a block-level container for script output',
+        'output is not a valid HTML5 element',
+      ],
+      correct: 1,
+      explanation:
+        '`<output>` represents the result of a computation (e.g. slider result, form calculation). It can reference form controls with `for` attribute, and is announced by assistive technologies as the output of those controls. Use it instead of `<span>` when the content is a computed result.',
+      hint: 'Think of the "result" slot in a calculator interface.',
+      difficulty: 'advanced',
+      tags: ['Forms', 'output element', 'Semantics'],
+    },
+    {
+      topic: 'HTML – details and summary',
+      prompt: 'What functionality does the `<details>` / `<summary>` element pair provide natively?',
+      options: [
+        'A dropdown select menu',
+        'A disclosure widget: clicking the summary toggles the visibility of the remaining details content, with built-in expand/collapse behaviour requiring no JavaScript',
+        'An accordion component that can only open one panel at a time',
+        'A progress indicator',
+      ],
+      correct: 1,
+      explanation:
+        '`<details>` wraps content that can be hidden/shown. `<summary>` is its visible header and toggle. Browsers render a disclosure triangle, manage the open/closed state via the `open` attribute, and expose the correct ARIA semantics. No JavaScript needed for basic toggle behaviour.',
+      hint: 'A native expand/collapse widget with zero JavaScript.',
+      difficulty: 'intermediate',
+      tags: ['details', 'summary', 'Disclosure Widget'],
+    },
+    {
+      topic: 'HTML – time element',
+      prompt: 'Why is the `<time datetime="2026-03-14">` element semantically valuable?',
+      options: [
+        'It auto-formats dates based on browser locale',
+        'It embeds a machine-readable date/time alongside human-readable text, enabling search engines, calendar apps, and assistive technologies to parse temporal information unambiguously',
+        'It synchronises to the user\'s system clock',
+        'It is a purely cosmetic element with no semantic benefit',
+      ],
+      correct: 1,
+      explanation:
+        '`<time>` allows you to display a date/time in any human-friendly format while the `datetime` attribute provides a machine-parsable ISO 8601 value. Search engines and browser extensions can extract calendar events, and assistive technologies can present dates in the user\'s preferred format.',
+      hint: 'Human text + machine-readable datetime attribute = semantic win.',
+      difficulty: 'intermediate',
+      tags: ['time element', 'Semantics', 'SEO'],
+    },
+    {
+      topic: 'HTML – figure and figcaption',
+      prompt: 'What is the difference between wrapping an image in `<figure>` vs just using a bare `<img>` tag?',
+      options: [
+        'figure applies a border to images automatically',
+        '<figure> groups self-contained content (image, diagram, code) with its optional <figcaption>, communicating that caption and content are a semantic unit; useful for screen readers and CSS targeting',
+        'figure enables lazy loading automatically',
+        'There is no semantic difference',
+      ],
+      correct: 1,
+      explanation:
+        '`<figure>` marks content as a self-contained unit that can be captioned and moved without affecting document flow. `<figcaption>` provides a visible caption programmatically associated with the figure. Screen readers can announce "Figure: [caption]" as a unit.',
+      hint: 'figure + figcaption create a semantic image + caption unit.',
+      difficulty: 'beginner',
+      tags: ['figure', 'figcaption', 'Images'],
+    },
+    {
+      topic: 'HTML – lang attribute',
+      prompt: 'Why is the `lang` attribute on the `<html>` element critically important for accessibility?',
+      options: [
+        'It sets the page\'s display language for the browser\'s UI',
+        'It enables screen readers to select the correct text-to-speech voice and pronunciation rules, and allows browsers to apply appropriate quotation marks and hyphenation',
+        'It forces the page to load in the user\'s preferred language',
+        'The lang attribute is optional and provides no functional benefit',
+      ],
+      correct: 1,
+      explanation:
+        '`<html lang="en">` declares the primary language of the page. Screen readers use this to select the correct TTS voice and pronunciation dictionary. Browsers use it for spell-checking. Missing or incorrect `lang` is a WCAG 2.1 Level A failure (Success Criterion 3.1.1).',
+      hint: 'WCAG 3.1.1 Language of Page is a Level A requirement.',
+      difficulty: 'beginner',
+      tags: ['lang', 'Accessibility', 'WCAG'],
+    },
+    {
+      topic: 'HTML – tabindex values',
+      prompt: 'What is the difference between `tabindex="0"`, `tabindex="-1"`, and a positive `tabindex` value?',
+      options: [
+        'All positive tabindex values behave identically',
+        'tabindex="0" adds the element to the natural tab order; tabindex="-1" makes it programmatically focusable but removes it from tab order; positive values create a custom tab order (generally avoided as it disrupts natural flow)',
+        'tabindex="-1" makes the element invisible',
+        'tabindex only works on form elements',
+      ],
+      correct: 1,
+      explanation:
+        '`tabindex="0"` inserts the element into the tab order at its position in DOM order. `tabindex="-1"` enables programmatic focus (`element.focus()`) but removes it from keyboard tab sequence. Positive tabindex values force a custom tab order and are considered an anti-pattern as they create a confusing navigation sequence.',
+      hint: '0 = natural order, -1 = focus via script only, positive = avoid.',
+      difficulty: 'intermediate',
+      tags: ['tabindex', 'Keyboard Navigation', 'Accessibility'],
+    },
+  ],
+  { featured: true, aliases: ['html', 'html5', 'html quiz', 'html questions'] }
+)

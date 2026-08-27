@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg-base: #f8fafc;
+    --color-bg-surface: #ffffff;
+    --color-bg-elevated: #f1f5f9;
+    --color-text-primary: #0f172a;
+    --color-text-secondary: #475569;
+    --color-text-muted: #94a3b8;
+    --color-border: #e2e8f0;
+    --color-border-subtle: #f1f5f9;
+    --color-brand: #6366f1;
+    --color-brand-hover: #4f46e5;
+  }
+
+  .dark {
+    --color-bg-base: #030712;
+    --color-bg-surface: #0b0f19;
+    --color-bg-elevated: #111827;
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #9ca3af;
+    --color-text-muted: #6b7280;
+    --color-border: #1f2937;
+    --color-border-subtle: #111827;
+    --color-brand: #6366f1;
+    --color-brand-hover: #818cf8;
+  }
+
+  * {
+    @apply border-surface-200 dark:border-surface-800;
+  }
+
+  body {
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Custom subtle scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-surface-300 dark:bg-surface-800 rounded-full hover:bg-surface-400 dark:hover:bg-surface-700 transition-colors;
+  }
+
+  /* WCAG: Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-surface-950;
+  }
+
+  .glass-panel {
+    @apply bg-white/80 dark:bg-surface-900/80 backdrop-blur-md border border-surface-200/80 dark:border-surface-800/80;
+  }
+
+  .sr-only-focusable {
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-brand-600 focus:text-white focus:rounded-lg focus:shadow-lg focus:ring-2 focus:ring-offset-2 focus:ring-brand-500;
+  }
+}
