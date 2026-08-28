@@ -18,7 +18,7 @@ export const cssDeepTest = buildExpandedTest(
   webCat,
   'css',
   'intermediate',
-  30,
+  45,
   [
     {
       topic: 'Cascade & Specificity',
@@ -475,6 +475,182 @@ export const cssDeepTest = buildExpandedTest(
       hint: 'Layers control which block of CSS wins, independent of specificity.',
       difficulty: 'advanced',
       tags: ['@layer', 'Cascade Layers', 'Modern CSS'],
+    },
+    {
+      topic: 'CSS – combinators',
+      prompt: 'What does the child combinator `>` select in `ul > li` versus the descendant combinator `ul li`?',
+      options: [
+        'They are identical in behaviour',
+        '`ul > li` selects only direct children of ul; `ul li` selects all li descendants (including nested ones inside other lists)',
+        '`ul > li` selects grandchildren only',
+        '`>` is not valid CSS',
+      ],
+      correct: 1,
+      explanation:
+        'The child combinator (`A > B`) matches B that is a direct child of A. The descendant combinator (`A B`) matches any B nested anywhere inside A. Use `>` for precise structural targeting and to avoid over-matching nested elements.',
+      hint: '> means direct parent-child; space means anywhere inside.',
+      difficulty: 'beginner',
+      tags: ['Combinators', 'Selectors', 'CSS'],
+    },
+    {
+      topic: 'CSS – :nth-child vs :nth-of-type',
+      prompt: 'What is the difference between `li:nth-child(2)` and `li:nth-of-type(2)`?',
+      options: [
+        'They are identical',
+        'nth-child counts position among all siblings regardless of type; nth-of-type counts position only among siblings of the same element type',
+        'nth-of-type only works on images',
+        'nth-child is deprecated',
+      ],
+      correct: 1,
+      explanation:
+        '`li:nth-child(2)` matches an li only if it is the 2nd child of its parent among ALL siblings. `li:nth-of-type(2)` matches the 2nd li among siblings, ignoring non-li siblings. This matters when a list is interleaved with other elements (e.g. headings).',
+      hint: 'child = all siblings; of-type = same tag siblings.',
+      difficulty: 'intermediate',
+      tags: ['Pseudo-class', 'nth-child', 'nth-of-type'],
+    },
+    {
+      topic: 'CSS – transform vs absolute positioning',
+      prompt: 'Why is `transform: translate()` preferred over `top/left` for animating movement?',
+      options: [
+        'transforms are slower than top/left',
+        'Transforms are GPU-composited and do not trigger layout or paint, making movement animations far smoother than animating top/left which trigger layout recalculation',
+        'top/left animations are always smoother',
+        'There is no difference in performance',
+      ],
+      correct: 1,
+      explanation:
+        'Animating `top`, `left`, `width`, or `height` triggers layout (reflow) on every frame, which is expensive. `transform` and `opacity` are handled by the compositor thread and avoid layout/paint, enabling 60fps+ animations. This is a core performance optimisation principle.',
+      hint: 'Compositor-only properties (transform, opacity) are cheap to animate.',
+      difficulty: 'advanced',
+      tags: ['transform', 'Performance', 'Animation'],
+    },
+    {
+      topic: 'CSS – position: absolute and containing block',
+      prompt: 'What establishes the containing block for an absolutely positioned element with `position: absolute`?',
+      options: [
+        'Always the viewport',
+        'The nearest ancestor with a position value other than static (or that has a transform/filter/will-change), otherwise the initial containing block (viewport)',
+        'Always the <body> element',
+        'The nearest <div> only',
+      ],
+      correct: 1,
+      explanation:
+        'An absolutely positioned element is placed relative to its containing block. That is the nearest ancestor whose `position` is `relative`, `absolute`, `fixed`, or `sticky`. Notably, `transform`, `filter`, or `will-change` also create a containing block even when position is static.',
+      hint: 'Look for the nearest positioned ancestor (or transform).',
+      difficulty: 'intermediate',
+      tags: ['Positioning', 'Containing Block', 'absolute'],
+    },
+    {
+      topic: 'CSS – float and clear',
+      prompt: 'What does the `clear` property do in relation to floated elements?',
+      options: [
+        'It removes the float from an element',
+        'It forces the element to be placed below (not beside) any preceding floated elements on the specified side, commonly used to stop text wrapping around images',
+        'It makes the element float to the right automatically',
+        'It only works on flex containers',
+      ],
+      correct: 1,
+      explanation:
+        'Floats take an element out of normal flow so content wraps around it. `clear: both` (or left/right) on a following element pushes it below the float, ending the wrapping behaviour. Modern layouts favour Flexbox/Grid, but `clear` is still useful for floats like caption-wrapped images.',
+      hint: 'clear = "do not let floats sit beside me".',
+      difficulty: 'beginner',
+      tags: ['float', 'clear', 'Layout'],
+    },
+    {
+      topic: 'CSS – overflow values',
+      prompt: 'What is the difference between `overflow: hidden`, `overflow: scroll`, and `overflow: auto`?',
+      options: [
+        'They all behave identically',
+        'hidden clips overflowing content with no scrollbar; scroll always shows scrollbars; auto shows scrollbars only when content actually overflows',
+        'auto clips content like hidden but never allows scrolling',
+        'scroll only works on body',
+      ],
+      correct: 1,
+      explanation:
+        '`overflow: hidden` clips content and prevents scrolling. `overflow: scroll` always reserves scrollbar space (even when not needed). `overflow: auto` is the usual choice — it clips and adds scrollbars only when content overflows. `overflow-x`/`overflow-y` allow per-axis control.',
+      hint: 'auto = scrollbars only when needed.',
+      difficulty: 'beginner',
+      tags: ['overflow', 'Scrolling', 'Layout'],
+    },
+    {
+      topic: 'CSS – object-fit',
+      prompt: 'What does `object-fit: cover` do to an `<img>` with fixed width and height?',
+      options: [
+        'It stretches the image to fill the box, distorting proportions',
+        'It scales the image to cover the entire box while preserving aspect ratio, cropping overflow; `contain` fits the whole image (letterboxing), and `fill` stretches it',
+        'It only works for background images',
+        'It reduces the image file size',
+      ],
+      correct: 1,
+      explanation:
+        '`object-fit` controls how replaced elements (img, video) fit their content box. `cover` fills the box and crops excess (like background-size: cover). `contain` fits the whole image inside the box (may leave empty space). `fill` (default) stretches to the box dimensions, distorting the image.',
+      hint: 'cover = fill+ crop; contain = fit+ letterbox.',
+      difficulty: 'intermediate',
+      tags: ['object-fit', 'Images', 'Responsive'],
+    },
+    {
+      topic: 'CSS – background shorthand ordering',
+      prompt: 'In the `background` shorthand, which of these is a common pitfall?',
+      options: [
+        'Order of values never matters in the shorthand',
+        'Using background: color url(...) will reset other sub-properties (e.g. background-size) to initial values, easily wiping previous declarations in the same rule',
+        'background shorthand cannot set color',
+        'background shorthand is not supported in any browser',
+      ],
+      correct: 1,
+      explanation:
+        'Shorthand properties reset all omitted longhands to their initial values. `background: #fff url(img.png)` resets `background-size`, `background-position`, `background-repeat`, etc. to defaults. Prefer longhand properties when layering, or declare the shorthand fully, to avoid accidental resets.',
+      hint: 'Shorthands reset unlisted sub-properties.',
+      difficulty: 'intermediate',
+      tags: ['background', 'Shorthand', 'CSS Pitfalls'],
+    },
+    {
+      topic: 'CSS – :root and custom property scope',
+      prompt: 'Why are CSS custom properties usually declared on `:root`?',
+      options: [
+        'Because :root is required for variables to work at all',
+        '`:root` matches the <html> element and has the highest possible scope in the cascade, so variables defined there are inherited by every element in the document',
+        'Because variables cannot be declared on other selectors',
+        'Because :root prevents the variables from being used in media queries',
+      ],
+      correct: 1,
+      explanation:
+        '`:root` is a pseudo-class matching the document\'s root element (`<html>`). Custom properties inherit, so defining them on `:root` makes them available everywhere. You can still scope variables to other selectors (e.g. a `.dark` class) to override values for a subtree.',
+      hint: 'Define at the root for global reach; override locally as needed.',
+      difficulty: 'beginner',
+      tags: ['Custom Properties', ':root', 'Theming'],
+    },
+    {
+      topic: 'CSS – units rem vs em',
+      prompt: 'What is the key difference between `rem` and `em` units?',
+      options: [
+        'They are identical',
+        'rem is relative to the root element’s font-size; em is relative to the current element’s own font-size (which compounds inside nested elements)',
+        'em is always larger than rem',
+        'rem only works in media queries',
+      ],
+      correct: 1,
+      explanation:
+        '`rem` (root em) is always relative to `<html>` font-size, giving predictable, non-compounding sizes. `em` is relative to the element\'s own computed font-size, so `font-size: 2em` inside an already-2em element compounds to 4x the root. This makes `em` tricky for nested components, which is why `rem` is preferred for typography.',
+      hint: 'rem = root; em = element (compounds).',
+      difficulty: 'intermediate',
+      tags: ['rem', 'em', 'Typography', 'Units'],
+    },
+    {
+      topic: 'CSS – isolation property',
+      prompt: 'What does `isolation: isolate` do, and why is it useful?',
+      options: [
+        'It hides the element from screen readers',
+        'It creates a new stacking context without side effects (unlike transform/opacity), preventing z-index/blend-mode interactions from children from leaking out and affecting other parts of the page',
+        'It makes the element non-selectable',
+        'It disables CSS animations',
+      ],
+      correct: 1,
+      explanation:
+        '`isolation: isolate` is the cleanest way to create a stacking context because it has no visual side effects, unlike `transform`, `opacity`, or `position: fixed`. It is especially useful with `mix-blend-mode`, where you want a group of elements to blend among themselves but not with the rest of the page.',
+      hint: 'isolate = stacking context with no visual side effects.',
+      difficulty: 'advanced',
+      tags: ['isolation', 'Stacking Context', 'mix-blend-mode'],
     },
   ],
   { featured: true, aliases: ['css', 'css3', 'css quiz', 'css questions', 'css interview'] }

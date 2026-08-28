@@ -18,7 +18,7 @@ export const htmlDeepTest = buildExpandedTest(
   webCat,
   'html',
   'intermediate',
-  30,
+  45,
   [
     {
       topic: 'Semantic HTML – Document Structure',
@@ -441,6 +441,182 @@ export const htmlDeepTest = buildExpandedTest(
       hint: '0 = natural order, -1 = focus via script only, positive = avoid.',
       difficulty: 'intermediate',
       tags: ['tabindex', 'Keyboard Navigation', 'Accessibility'],
+    },
+    {
+      topic: 'HTML – doctype declaration',
+      prompt: 'What is the purpose of the `<!DOCTYPE html>` declaration at the top of an HTML document?',
+      options: [
+        'It is a required HTML tag that renders a visible banner',
+        'It switches the browser from quirks mode into standards mode, ensuring consistent CSS and layout behaviour',
+        'It tells search engines the document language',
+        'It is optional and has no effect in modern browsers',
+      ],
+      correct: 1,
+      explanation:
+        'The doctype is a declaration, not an element. Without it, browsers fall back to "quirks mode" which emulates legacy behaviour and breaks many modern CSS features. `<!DOCTYPE html>` puts the browser into standards mode so it follows the HTML5 specification consistently.',
+      hint: 'Think about quirks mode vs standards mode.',
+      difficulty: 'beginner',
+      tags: ['doctype', 'Standards Mode', 'Browser Rendering'],
+    },
+    {
+      topic: 'HTML – character encoding',
+      prompt: 'Why is `<meta charset="UTF-8">` typically placed as early as possible in the <head>?',
+      options: [
+        'It only affects the page title rendering',
+        'It tells the browser how to decode bytes into characters; placing it early prevents mojibake (garbled text) for any characters parsed before the declaration is reached',
+        'It is required only for non-English pages',
+        'It controls the font family used by the document',
+      ],
+      correct: 1,
+      explanation:
+        'The browser needs to know the character encoding before it can correctly interpret text. If the charset is declared late, characters already parsed may be misinterpreted (e.g. accented characters showing as garbage). UTF-8 supports virtually all characters and is the modern default.',
+      hint: 'Encoding must be known before text is decoded.',
+      difficulty: 'beginner',
+      tags: ['charset', 'UTF-8', 'Encoding'],
+    },
+    {
+      topic: 'HTML – void elements',
+      prompt: 'Which of the following HTML elements is a void (empty) element that must NOT have a closing tag?',
+      options: [
+        '<p>',
+        '<li>',
+        '<input>',
+        '<span>',
+      ],
+      correct: 2,
+      explanation:
+        'Void elements (also called empty elements) cannot have child content and therefore have no closing tag in HTML syntax. Examples include `<input>`, `<img>`, `<br>`, `<hr>`, `<meta>`, `<link>`, and `<source>`. In XHTML they were self-closed with a trailing slash, but that is optional in HTML5.',
+      hint: 'Void elements have no content between tags.',
+      difficulty: 'beginner',
+      tags: ['Void Elements', 'HTML Syntax', 'Empty Elements'],
+    },
+    {
+      topic: 'HTML – anchor and download attribute',
+      prompt: 'What does the `download` attribute on an `<a>` element do?',
+      options: [
+        'It forces the browser to open the linked file in a new tab',
+        'It instructs the browser to download the linked resource instead of navigating to it, optionally suggesting a filename',
+        'It only works for images',
+        'It requires a server-side redirect to function',
+      ],
+      correct: 1,
+      explanation:
+        '`<a href="report.pdf" download="my-report.pdf">` prompts a download and suggests the given filename. Without `download`, clicking the link navigates to the resource. The attribute has no effect for cross-origin URLs in some browsers for security reasons, where it simply acts as a normal navigation.',
+      hint: 'download changes navigation into a save action.',
+      difficulty: 'intermediate',
+      tags: ['Anchor', 'download attribute', 'Links'],
+    },
+    {
+      topic: 'HTML – form action and method',
+      prompt: 'What is the difference between `method="get"` and `method="post"` on a `<form>`?',
+      options: [
+        'get is faster than post in all cases',
+        'get appends form data to the URL as a query string (visible, cached, limited size) and is used for safe retrieval; post sends data in the request body (hidden, larger, used for state-changing submissions)',
+        'post is only used for file uploads',
+        'get and post behave identically except for styling',
+      ],
+      correct: 1,
+      explanation:
+        'GET serialises form data into the URL query string (e.g. ?name=alice). It is idempotent and should only retrieve data. POST transmits data in the request body, supporting larger payloads and is appropriate for creating/updating resources. Never use GET for passwords or sensitive data.',
+      hint: 'GET = data in URL; POST = data in body.',
+      difficulty: 'beginner',
+      tags: ['Forms', 'HTTP Methods', 'GET', 'POST'],
+    },
+    {
+      topic: 'HTML – input type="range"',
+      prompt: 'Which attributes of `<input type="range">` control its behaviour?',
+      options: [
+        'Only min and max are used',
+        'min, max, step, and value control the allowed range, increment, and starting position of the slider',
+        'range inputs only support value',
+        'step must always be 1',
+      ],
+      correct: 1,
+      explanation:
+        '`<input type="range" min="0" max="100" step="5" value="50">` defines a slider from 0 to 100, moving in increments of 5, starting at 50. `step="any"` allows continuous values. The current value is submitted as a number.',
+      hint: 'Slider bounds, granularity, and initial value.',
+      difficulty: 'intermediate',
+      tags: ['Forms', 'range input', 'Input Types'],
+    },
+    {
+      topic: 'HTML – the template element',
+      prompt: 'What is the purpose of the `<template>` element?',
+      options: [
+        'It displays a loading spinner',
+        'It holds inert HTML markup that is not rendered but can be cloned and inserted into the document at runtime via JavaScript',
+        'It is identical to a <div> with hidden styling',
+        'It only works inside <svg> elements',
+      ],
+      correct: 1,
+      explanation:
+        'Content inside `<template>` is parsed but not rendered or activated (scripts do not run, images do not load). JavaScript can use `template.content` (a DocumentFragment) and clone it to efficiently generate repeated UI. This is a common pattern for client-side rendering of lists.',
+      hint: 'Templates are parsed but not displayed until cloned.',
+      difficulty: 'advanced',
+      tags: ['template element', 'Web Components', 'DOM'],
+    },
+    {
+      topic: 'HTML – the slot element',
+      prompt: 'In Web Components, what does the `<slot>` element do?',
+      options: [
+        'It reserves space for advertising',
+        'It defines a placeholder inside a shadow DOM where light DOM children passed to the component are projected and rendered',
+        'It is a deprecated form element',
+        'It loads external HTML via AJAX',
+      ],
+      correct: 1,
+      explanation:
+        'Web Components use Shadow DOM for encapsulation. `<slot>` inside a component\'s shadow tree marks where the component\'s children (light DOM) appear. Named slots (`<slot name="title">`) map to `slot="title"` attributes on children, enabling flexible composition.',
+      hint: 'Slots project user-provided children into shadow DOM.',
+      difficulty: 'advanced',
+      tags: ['slot', 'Web Components', 'Shadow DOM'],
+    },
+    {
+      topic: 'HTML – the progress and meter elements',
+      prompt: 'When should you use `<meter>` instead of `<progress>`?',
+      options: [
+        'They are interchangeable',
+        'Use <progress> for a task completion indicator (0 to 100%); use <meter> for a scalar measurement within a known range (e.g. disk usage, test score) that is not necessarily a task',
+        'meter is only for file uploads',
+        'progress is deprecated',
+      ],
+      correct: 1,
+      explanation:
+        '`<progress>` semantically represents the completion of a task (download, upload, form steps). `<meter>` represents a measured value within a range, optionally with low/high/optimum markers (e.g. "75% battery", "CPU load"). Using the right one communicates intent to assistive technologies.',
+      hint: 'progress = task completion; meter = measured value.',
+      difficulty: 'intermediate',
+      tags: ['progress', 'meter', 'Semantic HTML'],
+    },
+    {
+      topic: 'HTML – srcset and sizes',
+      prompt: 'How do the `srcset` and `sizes` attributes on `<img>` work together?',
+      options: [
+        'srcset only works with the picture element',
+        'srcset lists candidate image URLs with their intrinsic widths; sizes tells the browser how wide the image will be displayed so it can pick the most appropriate candidate from srcset',
+        'sizes is required and overrides srcset',
+        'They are both deprecated in favour of CSS background images',
+      ],
+      correct: 1,
+      explanation:
+        '`srcset="img-480.jpg 480w, img-800.jpg 800w"` gives the browser multiple resolutions. `sizes="(max-width: 600px) 100vw, 50vw"` tells it the rendered width, so the browser downloads the smallest candidate that still looks crisp on the device\'s pixel density — saving bandwidth on small screens.',
+      hint: 'srcset = options; sizes = intended display width.',
+      difficulty: 'advanced',
+      tags: ['Responsive Images', 'srcset', 'sizes'],
+    },
+    {
+      topic: 'HTML – global hidden attribute',
+      prompt: 'What does the `hidden` attribute do, and how can CSS override it?',
+      options: [
+        'hidden hides the element only from screen readers',
+        'hidden applies display: none by default, but a CSS rule setting display to anything other than none (e.g. display: block) will override and reveal the element',
+        'hidden always wins over any CSS',
+        'hidden only works on <div> elements',
+      ],
+      correct: 1,
+      explanation:
+        'The `hidden` boolean attribute maps to the UA stylesheet rule `[hidden] { display: none }`. Because author styles have higher priority than the UA stylesheet, `element { display: flex }` overrides it and makes the element visible. Use `hidden` for state, not as a substitute for intentional styling.',
+      hint: 'hidden is just display:none in the UA stylesheet.',
+      difficulty: 'intermediate',
+      tags: ['hidden attribute', 'CSS Cascade', 'Visibility'],
     },
   ],
   { featured: true, aliases: ['html', 'html5', 'html quiz', 'html questions'] }
