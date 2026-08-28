@@ -4,6 +4,7 @@ export const dataAnalystTest: RawTest = {
   id: 'test-data-analyst',
   slug: 'data-analyst-test',
   title: 'Data Analyst Assessment',
+  aliases: ["Data Analyst Assessment", "Data Analyst", "Data Analyst test", "Data Analyst quiz", "Data Analyst online test", "Data Analyst practice test", "Data Analyst mcq", "Data Analyst mock test", "Data Analyst assessment", "Data Analyst questions"],
   shortDescription: 'Comprehensive test covering SQL aggregations, Excel XLOOKUP/PivotTables, Python Pandas dataframes, and statistical metrics.',
   fullDescription: 'Designed for aspiring and working Data Analysts. Evaluates your practical data manipulation skills across SQL, Excel formulas, Python Pandas data wrangling, and metric interpretation (outlier handling, retention cohorts, mean vs median).',
   category: {

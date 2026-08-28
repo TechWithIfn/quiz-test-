@@ -4,6 +4,7 @@ export const sqlBasicsTest: RawTest = {
   id: 'test-sql-basics',
   slug: 'sql-basics-test',
   title: 'SQL Basics Test',
+  aliases: ["SQL Basics Test", "SQL Basics", "SQL Basics test", "SQL Basics quiz", "SQL Basics online test", "SQL Basics practice test", "SQL Basics mcq", "SQL Basics mock test", "SQL Basics assessment", "SQL Basics questions", "sql test", "sql quiz"],
   shortDescription: 'Core querying fundamentals: SELECT, WHERE, GROUP BY, HAVING, basic JOINs, aggregate functions, and NULL handling.',
   fullDescription: 'Test your understanding of relational database query fundamentals. Master the logical query execution order, filtering with WHERE vs HAVING, joining tables with INNER and LEFT JOINs, and handling NULL values.',
   category: {

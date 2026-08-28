@@ -11,6 +11,7 @@ import { TestFilters } from '@/features/tests/TestFilters'
 import { TestList } from '@/features/tests/TestList'
 import { Button } from '@/components/ui/Button'
 import { ErrorState } from '@/components/ui/ErrorState'
+import { applyStaticPageSeoMetadata } from '@/utils/seo'
 
 export const TestsCatalogPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -23,6 +24,16 @@ export const TestsCatalogPage: React.FC = () => {
   const categoryParam = searchParams.get('cat') || 'all'
   const difficultyParam = (searchParams.get('diff') as DifficultyLevel) || 'all-levels'
   const sortParam = (searchParams.get('sort') as 'popular' | 'newest' | 'questions-asc' | 'time-asc') || 'popular'
+
+  useEffect(() => {
+    applyStaticPageSeoMetadata({
+      title: 'All Practice Tests & Quizzes – Free Online Tests | QuizFlow',
+      description:
+        'Browse every free practice test and quiz on QuizFlow. Filter by topic, difficulty, and language. No login required — instant scoring and detailed explanations.',
+      path: '/tests',
+      keywords: ['practice tests', 'online quizzes', 'free tests', 'skill assessment'],
+    })
+  }, [])
 
   useEffect(() => {
     Promise.all([

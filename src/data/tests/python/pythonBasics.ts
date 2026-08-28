@@ -4,6 +4,7 @@ export const pythonBasicsTest: RawTest = {
   id: 'test-py-basics',
   slug: 'python-basics-test',
   title: 'Python Basics Test',
+  aliases: ["Python Basics Test", "Python Basics", "Python Basics test", "Python Basics quiz", "Python Basics online test", "Python Basics practice test", "Python Basics mcq", "Python Basics mock test", "Python Basics assessment", "Python Basics questions", "python test", "python quiz"],
   shortDescription: 'Core syntax, built-in data types (lists, tuples, dicts, sets), mutable vs immutable objects, and control flow.',
   fullDescription: 'Assess your foundational understanding of Python 3. Learn how dynamic typing, sequence indexing, list comprehensions, dictionary operations, and built-in functions behave under the hood.',
   category: {

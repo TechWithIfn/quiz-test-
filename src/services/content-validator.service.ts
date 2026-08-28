@@ -77,6 +77,7 @@ export class ContentValidatorService {
     const seenTestSlugs = new Set<string>()
     const globalQuestionIds = new Set<string>()
     const globalQuestions: { testSlug: string; question: RawQuestion }[] = []
+    const testSlugToId = new Map<string, string>()
 
     let totalQuestions = 0
 
@@ -87,6 +88,7 @@ export class ContentValidatorService {
       }
 
       // 1. Validate Test Level
+      testSlugToId.set(test.slug, test.id)
       this.validateTestMetadata(test, seenTestIds, seenTestSlugs, errors, warnings)
 
       // 2. Validate Questions Level
@@ -140,6 +142,11 @@ export class ContentValidatorService {
         }
       }
     }
+
+    // ===== Cross-test (global) duplicate detection =====
+    // Report only; never auto-delete. These are warnings so validation still passes.
+    this.detectGlobalNearDuplicateQuestions(globalQuestions, testSlugToId, warnings)
+    this.detectDuplicateOptionSets(globalQuestions, testSlugToId, warnings)
 
     return {
       valid: errors.length === 0,
@@ -410,6 +417,79 @@ export class ContentValidatorService {
         field: 'topic',
         message: `Topic "${q.topic}" is too short (< 2 chars). Use descriptive domain topics (e.g. "Indexing", "Memory Management").`,
       })
+    }
+  }
+
+  /**
+   * Detect near-duplicate question prompts across DIFFERENT tests.
+   * Uses a higher similarity threshold than within-test checks to avoid false positives
+   * on legitimately related-but-distinct questions. Reports only.
+   */
+  private static detectGlobalNearDuplicateQuestions(
+    globalQuestions: { testSlug: string; question: RawQuestion }[],
+    testSlugToId: Map<string, string>,
+    warnings: ValidationIssue[]
+  ) {
+    const threshold = 0.85
+    for (let i = 0; i < globalQuestions.length; i++) {
+      for (let j = i + 1; j < globalQuestions.length; j++) {
+        const a = globalQuestions[i]
+        const b = globalQuestions[j]
+        if (a.testSlug === b.testSlug) continue
+        const similarity = calculateSimilarity(a.question.question, b.question.question)
+        if (similarity >= threshold) {
+          const aId = testSlugToId.get(a.testSlug) || a.testSlug
+          const bId = testSlugToId.get(b.testSlug) || b.testSlug
+          warnings.push({
+            type: 'warning',
+            testId: aId,
+            testSlug: a.testSlug,
+            questionId: a.question.id,
+            field: 'question',
+            message: `Question "${a.question.id}" is ${Math.round(similarity * 100)}% similar to "${b.question.id}" in test "${bId}". Possible cross-test duplicate (minor wording change).`,
+          })
+        }
+      }
+    }
+  }
+
+  /**
+   * Detect questions that share an identical set of answer option texts
+   * (ignoring option IDs). A shared option set with different prompts often
+   * indicates a copied/reused stem-distractor block and adds no new concept.
+   */
+  private static detectDuplicateOptionSets(
+    globalQuestions: { testSlug: string; question: RawQuestion }[],
+    testSlugToId: Map<string, string>,
+    warnings: ValidationIssue[]
+  ) {
+    const bySignature = new Map<string, { testSlug: string; questionId: string }[]>()
+    for (const { testSlug, question } of globalQuestions) {
+      const signature = question.options
+        .map((opt) => normalizeForComparison(opt.text || ''))
+        .filter(Boolean)
+        .sort()
+        .join(' || ')
+      if (!signature) continue
+      const entry = bySignature.get(signature) || []
+      entry.push({ testSlug, questionId: question.id })
+      bySignature.set(signature, entry)
+    }
+
+    for (const [, items] of bySignature) {
+      if (items.length < 2) continue
+      for (const item of items) {
+        const others = items.filter((o) => o !== item)
+        const ref = others.map((o) => `${testSlugToId.get(o.testSlug) || o.testSlug}/${o.questionId}`).join(', ')
+        warnings.push({
+          type: 'warning',
+          testId: testSlugToId.get(item.testSlug),
+          testSlug: item.testSlug,
+          questionId: item.questionId,
+          field: 'options',
+          message: `Option set is identical to question(s): ${ref}. Consider unique distractors or a distinct concept.`,
+        })
+      }
     }
   }
 }

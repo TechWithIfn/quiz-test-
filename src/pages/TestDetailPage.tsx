@@ -118,7 +118,7 @@ export const TestDetailPage: React.FC = () => {
           </li>
           <li className="inline-flex items-center">
             <Link
-              to={`/tests?cat=${test.category.slug}`}
+              to={`/categories/${test.category.slug}`}
               className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors focus-ring rounded p-0.5"
             >
               {test.category.name}

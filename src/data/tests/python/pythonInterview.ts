@@ -4,6 +4,7 @@ export const pythonInterviewTest: RawTest = {
   id: 'test-py-interview',
   slug: 'python-interview-test',
   title: 'Python Interview Test',
+  aliases: ["Python Interview Test", "Python Interview", "Python Interview test", "Python Interview quiz", "Python Interview online test", "Python Interview practice test", "Python Interview mcq", "Python Interview mock test", "Python Interview assessment", "Python Interview questions", "Python Interview interview questions", "Python Interview interview", "interview preparation", "python test", "python quiz"],
   shortDescription: 'Advanced interview assessment: generators, decorators, GIL, dunder protocols, context managers, and memory management.',
   fullDescription: 'Challenge your deep understanding of Python internals frequently targeted in technical interviews: Python Global Interpreter Lock (GIL), iterator protocol vs generator yield, args/kwargs decorators, `__new__` vs `__init__`, and garbage collection.',
   category: {

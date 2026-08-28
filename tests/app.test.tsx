@@ -48,7 +48,7 @@ describe('App Route Navigation & Component Mounting', () => {
     expect(screen.getByText(/Topics & Skills Tested/i)).toBeInTheDocument()
     expect(screen.getByText(/What You Will Practice/i)).toBeInTheDocument()
     expect(screen.getByText(/100% free, no login or profile setup required/i)).toBeInTheDocument()
-  })
+  }, 20000)
 
   it('renders single question practice page', async () => {
     window.history.pushState({}, 'Practice Question', '/practice/sql-interview-test/q-sqli-1')

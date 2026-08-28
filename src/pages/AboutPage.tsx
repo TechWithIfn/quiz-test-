@@ -12,8 +12,19 @@ import {
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { CodeBlock } from '@/components/ui/CodeBlock'
+import { useEffect } from 'react'
+import { applyStaticPageSeoMetadata } from '@/utils/seo'
 
 export const AboutPage: React.FC = () => {
+  useEffect(() => {
+    applyStaticPageSeoMetadata({
+      title: 'About QuizFlow – Free, Open-Source Practice Tests',
+      description:
+        'QuizFlow is a free, open-source platform for practice tests and quizzes. No login, no tracking, fully client-side, and community-driven. Learn more about our approach.',
+      path: '/about',
+      keywords: ['about QuizFlow', 'open source quiz', 'free practice tests'],
+    })
+  }, [])
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full space-y-12">
       {/* Top Banner */}

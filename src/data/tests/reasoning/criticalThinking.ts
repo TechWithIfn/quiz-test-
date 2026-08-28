@@ -4,6 +4,7 @@ export const criticalThinkingTest: RawTest = {
   id: 'test-reasoning-critical',
   slug: 'critical-thinking-test',
   title: 'Critical Thinking & Problem Solving',
+  aliases: ["Critical Thinking & Problem Solving", "Critical Thinking & Problem Solving test", "Critical Thinking & Problem Solving quiz", "Critical Thinking & Problem Solving online test", "Critical Thinking & Problem Solving practice test", "Critical Thinking & Problem Solving mcq", "Critical Thinking & Problem Solving mock test", "Critical Thinking & Problem Solving assessment", "Critical Thinking & Problem Solving questions"],
   shortDescription: 'Identify logical fallacies, cognitive biases, probabilistic paradoxes, and decision tree logic.',
   fullDescription: 'Sharpen your analytical problem-solving acumen. Assess your understanding of statistical base rate fallacies, correlation vs causation traps, confirmation bias, and game theory decision matrices.',
   category: {

@@ -4,6 +4,7 @@ export const sqlInterviewTest: RawTest = {
   id: 'test-sql-interview',
   slug: 'sql-interview-test',
   title: 'SQL Interview Test',
+  aliases: ["SQL Interview Test", "SQL Interview", "SQL Interview test", "SQL Interview quiz", "SQL Interview online test", "SQL Interview practice test", "SQL Interview mcq", "SQL Interview mock test", "SQL Interview assessment", "SQL Interview questions", "SQL Interview interview questions", "SQL Interview interview", "interview preparation", "sql test", "sql quiz"],
   shortDescription: 'Advanced database interview queries: Window functions (RANK, DENSE_RANK, LEAD/LAG), CTEs, Indexing, and ACID isolation.',
   fullDescription: 'Master challenging SQL interview patterns. Deep dive into analytical window functions, Common Table Expressions (CTEs), subqueries vs EXISTS, indexing performance tradeoffs, and transaction isolation anomalies.',
   category: {

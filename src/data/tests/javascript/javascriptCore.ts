@@ -4,6 +4,7 @@ export const javascriptCoreTest: RawTest = {
   id: 'test-js-core',
   slug: 'javascript-core-test',
   title: 'JavaScript Core & Async Internals',
+  aliases: ["JavaScript Core & Async Internals", "JavaScript Core & Async Internals test", "JavaScript Core & Async Internals quiz", "JavaScript Core & Async Internals online test", "JavaScript Core & Async Internals practice test", "JavaScript Core & Async Internals mcq", "JavaScript Core & Async Internals mock test", "JavaScript Core & Async Internals assessment", "JavaScript Core & Async Internals questions"],
   shortDescription: 'Closures, event loop microtasks, prototypes, WeakMaps, and asynchronous patterns in ESNext.',
   fullDescription: 'Challenge your practical knowledge of modern JavaScript fundamentals: call stack and microtask execution order, closure lexical scoping, WeakMap garbage collection, and promise error handling.',
   category: {

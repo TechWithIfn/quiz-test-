@@ -6,6 +6,7 @@ import { MainLayout } from '@/layouts/MainLayout'
 import { HomePage } from '@/pages/HomePage'
 import { TestsCatalogPage } from '@/pages/TestsCatalogPage'
 import { TestDetailPage } from '@/pages/TestDetailPage'
+import { CategoryPage } from '@/pages/CategoryPage'
 
 // Feature & Secondary Pages (Lazy-loaded chunks)
 const QuizTakingPage = lazy(() => import('@/pages/QuizTakingPage').then(m => ({ default: m.QuizTakingPage })))
@@ -49,6 +50,8 @@ export const App: React.FC = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/tests" element={<TestsCatalogPage />} />
             <Route path="/tests/:slug" element={<TestDetailPage />} />
+            <Route path="/categories" element={<CategoryPage />} />
+            <Route path="/categories/:slug" element={<CategoryPage />} />
             <Route path="/quiz/:testSlug/result" element={<QuizResultPage />} />
             <Route path="/quiz/:testSlug/review" element={<QuizReviewPage />} />
             <Route path="/about" element={<AboutPage />} />

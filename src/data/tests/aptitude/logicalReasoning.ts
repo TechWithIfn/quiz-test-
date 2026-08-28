@@ -4,6 +4,7 @@ export const logicalReasoningTest: RawTest = {
   id: 'test-aptitude-logic',
   slug: 'logical-reasoning-test',
   title: 'Logical Reasoning & Quantitative Aptitude',
+  aliases: ["Logical Reasoning & Quantitative Aptitude", "Logical Reasoning & Quantitative Aptitude test", "Logical Reasoning & Quantitative Aptitude quiz", "Logical Reasoning & Quantitative Aptitude online test", "Logical Reasoning & Quantitative Aptitude practice test", "Logical Reasoning & Quantitative Aptitude mcq", "Logical Reasoning & Quantitative Aptitude mock test", "Logical Reasoning & Quantitative Aptitude assessment", "Logical Reasoning & Quantitative Aptitude questions"],
   shortDescription: 'Assess deductive reasoning, numerical pattern deduction, average speed calculation, and logical classifications.',
   fullDescription: 'Fast-paced mental agility quiz designed to test inductive reasoning, pattern recognition, and logical deduction under time constraints.',
   category: {

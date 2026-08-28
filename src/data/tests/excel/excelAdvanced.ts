@@ -4,6 +4,7 @@ export const excelAdvancedTest: RawTest = {
   id: 'test-excel-advanced',
   slug: 'excel-advanced-test',
   title: 'Excel Advanced Formulas & Analytics',
+  aliases: ["Excel Advanced Formulas & Analytics", "Excel Advanced Formulas & Analytics test", "Excel Advanced Formulas & Analytics quiz", "Excel Advanced Formulas & Analytics online test", "Excel Advanced Formulas & Analytics practice test", "Excel Advanced Formulas & Analytics mcq", "Excel Advanced Formulas & Analytics mock test", "Excel Advanced Formulas & Analytics assessment", "Excel Advanced Formulas & Analytics questions", "excel test", "excel quiz"],
   shortDescription: 'INDEX-MATCH, dynamic arrays (FILTER, UNIQUE, SORT), PivotTables, and financial modeling formulas.',
   fullDescription: 'Challenge your advanced Microsoft Excel proficiency. Covers modern dynamic array functions (UNIQUE, FILTER, SORT, XLOOKUP), two-way INDEX/MATCH lookups, conditional formatting logic, and data analysis best practices.',
   category: {

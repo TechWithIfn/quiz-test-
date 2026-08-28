@@ -67,17 +67,17 @@ export const Footer: React.FC = () => {
                 </button>
               </li>
               <li>
-                <Link to="/tests?cat=programming" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                <Link to="/categories/programming" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
                   Programming
                 </Link>
               </li>
               <li>
-                <Link to="/tests?cat=data-analytics" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                <Link to="/categories/data-analytics" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
                   Data & Analytics
                 </Link>
               </li>
               <li>
-                <Link to="/tests?cat=web-development" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                <Link to="/categories/web-development" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
                   Web Development
                 </Link>
               </li>

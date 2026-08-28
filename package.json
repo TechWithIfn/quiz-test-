@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "validate:content": "node scripts/validate-content.mjs",
+    "audit:content": "node scripts/audit-content.mjs",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
