@@ -5,7 +5,6 @@ node_modules/
 
 # Build output
 dist/
-api/dist/
 dist-ssr/
 *.local
 
