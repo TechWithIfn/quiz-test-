@@ -34,3 +34,7 @@ Thumbs.db
 
 # Misc
 qa-vitest-results.json
+
+# Vercel API function build assets (generated at build time)
+api/dist/
+api/node_modules/

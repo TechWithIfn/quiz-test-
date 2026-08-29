@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "node scripts/generate-sitemap.mjs && tsc && vite build",
-    "build:vercel": "npm run build:backend && npm --prefix backend prune --omit=dev && npm run build",
+    "build:vercel": "npm run build:backend && npm --prefix backend prune --omit=dev && node scripts/build-api.mjs && npm run build",
     "vercel:migrate": "npm --prefix backend run db:deploy",
     "preview": "vite preview",
     "test": "vitest run",
@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@fastify/aws-lambda": "^3.2.0",
+    "@prisma/client": "^7.10.0",
     "aws-lambda": "^1.0.7",
     "clsx": "^2.1.1",
     "katex": "^0.18.4",
