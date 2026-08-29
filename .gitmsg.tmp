@@ -1,1 +1,0 @@
-Fix Vercel routing: remove redundant /api rewrite, exclude /api from SPA fallback, pin Node 20
