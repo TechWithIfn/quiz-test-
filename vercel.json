@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "nodeVersion": "20.x",
   "installCommand": "npm install && npm --prefix backend install && npm --prefix backend run db:generate",
   "buildCommand": "npm run build:vercel",
   "outputDirectory": "dist",
@@ -11,7 +12,6 @@
     }
   },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
