@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "node scripts/generate-sitemap.mjs && tsc && vite build",
-    "build:vercel": "npm run build:backend && npm run build",
+    "build:vercel": "npm run build:backend && npm --prefix backend prune --omit=dev && npm run build",
     "vercel:migrate": "npm --prefix backend run db:deploy",
     "preview": "vite preview",
     "test": "vitest run",
