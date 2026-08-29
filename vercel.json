@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "nodeVersion": "20.x",
   "installCommand": "npm install && npm --prefix backend install && npm --prefix backend run db:generate",
   "buildCommand": "npm run build:vercel",
   "outputDirectory": "dist",
   "functions": {
     "api/[[...path]].ts": {
+      "runtime": "nodejs20.x",
       "memory": 1024,
       "maxDuration": 30,
       "includeFiles": "backend/prisma/**"
