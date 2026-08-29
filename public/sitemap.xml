@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>http://localhost:5173/</loc><lastmod>2026-08-28</lastmod></url>
-  <url><loc>http://localhost:5173/tests</loc><lastmod>2026-08-28</lastmod></url>
-  <url><loc>http://localhost:5173/about</loc><lastmod>2026-08-28</lastmod></url>
-  <url><loc>http://localhost:5173/categories</loc><lastmod>2026-08-28</lastmod></url>
-  <url><loc>http://localhost:5173/categories/data-analytics</loc><lastmod>2026-08-28</lastmod></url>
-  <url><loc>http://localhost:5173/categories/web-development</loc><lastmod>2026-08-28</lastmod></url>
-  <url><loc>http://localhost:5173/categories/programming</loc><lastmod>2026-08-28</lastmod></url>
-  <url><loc>http://localhost:5173/categories/interview-preparation</loc><lastmod>2026-08-28</lastmod></url>
+  <url><loc>http://localhost:5173/</loc><lastmod>2026-08-29</lastmod></url>
+  <url><loc>http://localhost:5173/tests</loc><lastmod>2026-08-29</lastmod></url>
+  <url><loc>http://localhost:5173/about</loc><lastmod>2026-08-29</lastmod></url>
+  <url><loc>http://localhost:5173/categories</loc><lastmod>2026-08-29</lastmod></url>
+  <url><loc>http://localhost:5173/categories/data-analytics</loc><lastmod>2026-08-29</lastmod></url>
+  <url><loc>http://localhost:5173/categories/web-development</loc><lastmod>2026-08-29</lastmod></url>
+  <url><loc>http://localhost:5173/categories/programming</loc><lastmod>2026-08-29</lastmod></url>
+  <url><loc>http://localhost:5173/categories/interview-preparation</loc><lastmod>2026-08-29</lastmod></url>
   <url><loc>http://localhost:5173/tests/python-data-analysis-test</loc><lastmod>2026-03-01</lastmod></url>
   <url><loc>http://localhost:5173/tests/sql-group-by-test</loc><lastmod>2026-03-01</lastmod></url>
   <url><loc>http://localhost:5173/tests/sql-subqueries-test</loc><lastmod>2026-03-01</lastmod></url>

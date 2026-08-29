@@ -1,0 +1,16 @@
+{
+  "id": "q_graph_bfs",
+  "type": "single-choice",
+  "question": "Which data structure does breadth-first search (BFS) use to track nodes to visit?",
+  "options": [
+    { "id": "a", "text": "A queue (FIFO)", "correct": true },
+    { "id": "b", "text": "A stack (LIFO)", "correct": false },
+    { "id": "c", "text": "A random set", "correct": false }
+  ],
+  "explanation": "BFS explores level by level, enqueuing neighbors into a queue so the oldest discovered node is visited first.",
+  "difficulty": "beginner",
+  "topicSlug": "graphs",
+  "points": 1,
+  "tags": ["graphs", "traversal"],
+  "original": true
+}

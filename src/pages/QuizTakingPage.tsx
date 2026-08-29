@@ -13,6 +13,7 @@ import { AlertCircle } from 'lucide-react'
 import { ErrorState } from '@/components/ui/ErrorState'
 import { useQuizTimer } from '@/hooks/useQuizTimer'
 import { SkipToContent } from '@/components/ui/SkipToContent'
+import { QuestionSkeleton } from '@/components/ui/Skeletons'
 
 export const QuizTakingPage: React.FC = () => {
   const { testSlug } = useParams<{ testSlug: string }>()
@@ -36,6 +37,8 @@ export const QuizTakingPage: React.FC = () => {
     tickTimer,
     submitTest,
     resetQuizSession,
+    isSubmitting,
+    submitError,
   } = useQuizStore()
 
   const { saveResult } = useHistoryStore()
@@ -49,6 +52,7 @@ export const QuizTakingPage: React.FC = () => {
   const [showSubmitModal, setShowSubmitModal] = useState(false)
   const [showExitModal, setShowExitModal] = useState(false)
   const [hasLoadError, setHasLoadError] = useState(false)
+  const [paletteOpen, setPaletteOpen] = useState(false)
 
   // Initialize test session
   useEffect(() => {
@@ -101,13 +105,9 @@ export const QuizTakingPage: React.FC = () => {
     }
   }, [attempt?.status, lastCompletedResult, navigate, saveResult, testSlug])
 
-  const handleFinalSubmit = () => {
+  const handleFinalSubmit = async () => {
     setShowSubmitModal(false)
-    const result = submitTest()
-    if (result) {
-      saveResult(result)
-      navigate(`/quiz/${testSlug}/result`, { replace: true })
-    }
+    await submitTest()
   }
 
   const handleConfirmExit = () => {
@@ -120,17 +120,27 @@ export const QuizTakingPage: React.FC = () => {
     return <ErrorState message="The quiz could not be started." onRetry={() => window.location.reload()} />
   }
 
-  if (isLoading || !activeTest || !attempt || questions.length === 0) {
+  if (submitError) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-surface-50 dark:bg-surface-950" role="status">
-        <div className="text-center space-y-3">
-          <div className="w-8 h-8 border-3 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-sm font-medium text-surface-600 dark:text-surface-400">
-            Preparing your test session...
-          </p>
-        </div>
+      <ErrorState
+        message={submitError}
+        onRetry={() => {
+          void submitTest()
+        }}
+      />
+    )
+  }
+
+  if (isSubmitting) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-20 text-center text-surface-400" role="status" aria-live="polite">
+        <div className="inline-block animate-pulse text-sm">Submitting your answers…</div>
       </div>
     )
+  }
+
+  if (isLoading || !activeTest || !attempt || questions.length === 0) {
+    return <QuestionSkeleton />
   }
 
   const currentQuestion = questions[activeQuestionIndex]
@@ -172,32 +182,53 @@ export const QuizTakingPage: React.FC = () => {
 
           {/* Question Palette Sidebar (1 col) */}
           <div className="lg:col-span-1 space-y-4">
-            <QuestionNavigator
-              questions={questions}
-              answers={attempt.answers}
-              activeIndex={activeQuestionIndex}
-              onSelectQuestion={(idx) => goToQuestion(idx)}
-            />
+            {/* Mobile collapsible toggle — keeps the palette from pushing the
+                question/actions down the page. Always visible on desktop. */}
+            <button
+              type="button"
+              onClick={() => setPaletteOpen((v) => !v)}
+              className="lg:hidden w-full flex items-center justify-between gap-2 px-4 py-3 rounded-xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 text-sm font-medium text-surface-700 dark:text-surface-300 focus-ring min-h-[44px]"
+              aria-expanded={paletteOpen}
+              aria-controls="question-palette-panel"
+            >
+              <span>Question Palette ({activeQuestionIndex + 1}/{questions.length})</span>
+              <span className="text-surface-400">{paletteOpen ? 'Hide' : 'Show'}</span>
+            </button>
 
-            <div className="p-4 rounded-xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 text-xs text-surface-500 space-y-2">
-              <div className="font-semibold text-surface-700 dark:text-surface-300">
-                Shortcuts
-              </div>
-              <div className="flex justify-between">
-                <span>Select option</span>
-                <span className="font-mono text-surface-700 dark:text-surface-300">1 - 4 or A - D</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Mark for review</span>
-                <span className="font-mono text-surface-700 dark:text-surface-300">F</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Next question</span>
-                <span className="font-mono text-surface-700 dark:text-surface-300">→</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Previous question</span>
-                <span className="font-mono text-surface-700 dark:text-surface-300">←</span>
+            <div
+              id="question-palette-panel"
+              className={`space-y-4 ${paletteOpen ? 'block' : 'hidden'} lg:block`}
+            >
+              <QuestionNavigator
+                questions={questions}
+                answers={attempt.answers}
+                activeIndex={activeQuestionIndex}
+                onSelectQuestion={(idx) => {
+                  goToQuestion(idx)
+                  setPaletteOpen(false)
+                }}
+              />
+
+              <div className="p-4 rounded-xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 text-xs text-surface-500 space-y-2">
+                <div className="font-semibold text-surface-700 dark:text-surface-300">
+                  Shortcuts
+                </div>
+                <div className="flex justify-between">
+                  <span>Select option</span>
+                  <span className="font-mono text-surface-700 dark:text-surface-300">1 - 4 or A - D</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Mark for review</span>
+                  <span className="font-mono text-surface-700 dark:text-surface-300">F</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Next question</span>
+                  <span className="font-mono text-surface-700 dark:text-surface-300">→</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Previous question</span>
+                  <span className="font-mono text-surface-700 dark:text-surface-300">←</span>
+                </div>
               </div>
             </div>
           </div>

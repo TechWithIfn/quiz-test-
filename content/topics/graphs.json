@@ -1,0 +1,8 @@
+{
+  "id": "topic_graphs",
+  "slug": "graphs",
+  "name": "Graphs",
+  "description": "Graph representations and traversal algorithms.",
+  "categorySlug": "algorithms",
+  "original": true
+}

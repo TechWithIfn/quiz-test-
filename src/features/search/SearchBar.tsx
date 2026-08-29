@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search, X, ArrowRight, Sparkles, Clock, HelpCircle, FileSearch } from 'lucide-react'
 import { Test } from '@/types'
-import { SearchService } from './search.service'
+import { searchApi, mapTest } from '@/lib/api'
 import { Badge } from '@/components/ui/Badge'
 import { cn } from '@/utils/cn'
 
 export interface SearchBarProps {
-  tests: Test[]
+  tests?: Test[]
   placeholder?: string
   autoFocus?: boolean
   initialQuery?: string
@@ -17,7 +17,6 @@ export interface SearchBarProps {
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
-  tests,
   placeholder = 'What do you want to test today?',
   autoFocus = false,
   initialQuery = '',
@@ -28,6 +27,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const [query, setQuery] = useState(initialQuery)
   const [isOpen, setIsOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
+  const [searchResults, setSearchResults] = useState<Test[]>([])
   const navigate = useNavigate()
   const containerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -36,14 +36,27 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     setQuery(initialQuery)
   }, [initialQuery])
 
-  const searchService = useRef(new SearchService(tests))
-
-  useEffect(() => {
-    searchService.current.updateTests(tests)
-  }, [tests])
-
+  // Instant dropdown is backed by the backend search API (online-only).
   const trimmedQuery = query.trim()
-  const searchResults = trimmedQuery.length > 0 ? searchService.current.search(tests, { query: trimmedQuery }).slice(0, 5) : []
+  useEffect(() => {
+    if (trimmedQuery.length < 2) {
+      setSearchResults([])
+      return
+    }
+    let cancelled = false
+    const handle = setTimeout(async () => {
+      try {
+        const res = await searchApi.query({ query: trimmedQuery })
+        if (!cancelled) setSearchResults(res.tests.map(mapTest).slice(0, 5))
+      } catch {
+        if (!cancelled) setSearchResults([])
+      }
+    }, 250)
+    return () => {
+      cancelled = true
+      clearTimeout(handle)
+    }
+  }, [trimmedQuery])
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {

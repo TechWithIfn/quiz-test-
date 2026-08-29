@@ -1,0 +1,16 @@
+{
+  "id": "q_sort_merge",
+  "type": "single-choice",
+  "question": "What is the time complexity of merge sort?",
+  "options": [
+    { "id": "a", "text": "O(n log n)", "correct": true },
+    { "id": "b", "text": "O(n)", "correct": false },
+    { "id": "c", "text": "O(n^2)", "correct": false }
+  ],
+  "explanation": "Merge sort splits the array recursively and merges in O(n) per level, giving O(n log n) overall.",
+  "difficulty": "beginner",
+  "topicSlug": "sorting",
+  "points": 1,
+  "tags": ["sorting", "complexity"],
+  "original": true
+}

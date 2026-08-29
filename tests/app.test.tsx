@@ -1,6 +1,57 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { App } from '@/App'
+
+vi.mock('@/services/test.service', async (importActual) => {
+  const actual = await importActual<typeof import('@/services/test.service')>()
+  const test: any = {
+    id: 'sql-interview-test',
+    slug: 'sql-interview-test',
+    title: 'SQL Interview Test',
+    description: '',
+    shortDescription: 'Practice SQL interview questions.',
+    fullDescription: 'Practice SQL interview questions.',
+    category: { id: 'sql', name: 'SQL', slug: 'sql', description: '', color: '#0ea5e9', icon: 'database', testCount: 1 },
+    difficulty: 'intermediate',
+    totalQuestions: 1,
+    timeLimitMinutes: 15,
+    passingScorePercentage: 70,
+    language: 'sql',
+    topics: ['SQL'],
+    skills: ['SQL'],
+    tags: [{ id: 'sql', name: 'sql', slug: 'sql' }],
+    questionBriefs: [],
+    featured: true,
+    seo: { title: '', description: '', keywords: [] },
+  }
+  const question: any = {
+    id: 'q-sqli-1',
+    testId: test.id,
+    text: 'What is SQL injection?',
+    options: [
+      { id: 'a', text: 'Option A' },
+      { id: 'b', text: 'Option B' },
+    ],
+    correctOptionId: '',
+    explanation: 'Expl',
+    points: 1,
+    topic: 'SQL',
+    difficulty: 'intermediate',
+    tags: ['sql'],
+    isMultipleChoice: false,
+    hasMultipleCorrect: false,
+  }
+  const fakeRepo: any = {
+    getAllTests: async () => [test],
+    getFeaturedTests: async () => [test],
+    getTestBySlug: async (slug: string) => (slug === test.slug ? test : null),
+    getTestById: async (id: string) => (id === test.id ? test : null),
+    getQuestionsForTest: async () => [question],
+    getCategories: async () => [],
+    getRelatedTests: async () => [],
+  }
+  return { ...actual, testRepository: fakeRepo }
+})
 
 describe('App Route Navigation & Component Mounting', () => {
   it('renders home page with instant search and featured tests', async () => {

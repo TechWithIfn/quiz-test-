@@ -1,0 +1,16 @@
+{
+  "id": "test_algo_practice",
+  "slug": "algo-practice",
+  "title": "Algorithms Practice",
+  "shortDescription": "Mixed algorithm questions for intermediate learners.",
+  "description": "A draft set of algorithm questions (not yet public).",
+  "difficulty": "intermediate",
+  "categorySlug": "algorithms",
+  "questionIds": ["q_sort_merge", "q_graph_bfs"],
+  "tags": ["algorithms"],
+  "status": "draft",
+  "version": "1.0.0",
+  "estimatedMinutes": 15,
+  "passingScorePercentage": 70,
+  "original": true
+}

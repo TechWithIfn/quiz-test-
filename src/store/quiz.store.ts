@@ -5,6 +5,7 @@ import { StorageService } from '@/services/storage.service'
 import { calculateTestResult } from '@/utils/scoring'
 import { createAttempt, moveToQuestion, selectAnswer, tickAttempt } from '@/engine/quizEngine'
 import { mistakeRepository } from '@/services/mistake.service'
+import { testsApi, mapVerificationToTestResult, ApiClientError } from '@/lib/api'
 
 interface QuizState {
   // Current active attempt state
@@ -13,6 +14,7 @@ interface QuizState {
   attempt: TestAttempt | null
   activeQuestionIndex: number
   isSubmitting: boolean
+  submitError: string | null
   lastCompletedResult: TestResult | null
 
   // Actions
@@ -26,7 +28,7 @@ interface QuizState {
   goToNextQuestion: () => void
   goToPreviousQuestion: () => void
   tickTimer: () => void
-  submitTest: () => TestResult | null
+  submitTest: () => Promise<TestResult | null>
   resetQuizSession: () => void
 }
 
@@ -36,6 +38,7 @@ export const useQuizStore = create<QuizState>((set, get) => ({
   attempt: StorageService.getItem<TestAttempt | null>(APP_CONFIG.storageKeys.activeAttempt, null),
   activeQuestionIndex: 0,
   isSubmitting: false,
+  submitError: null,
   lastCompletedResult: null,
 
   startTest: (test: Test, questions: Question[], options = {}) => {
@@ -233,7 +236,7 @@ export const useQuizStore = create<QuizState>((set, get) => ({
     }
   },
 
-  submitTest: () => {
+  submitTest: async () => {
     const { activeTest, questions, attempt } = get()
     if (!activeTest || !attempt || attempt.status === 'completed') return null
 
@@ -241,55 +244,111 @@ export const useQuizStore = create<QuizState>((set, get) => ({
     const totalAllocated = activeTest.timeLimitMinutes * 60
     const timeTakenSeconds = Math.max(1, totalAllocated - attempt.timeRemainingSeconds)
 
-    const result = calculateTestResult({
-      attemptId: attempt.id,
-      test: activeTest,
-      questions,
-      answers: attempt.answers,
-      startedAt: attempt.startedAt,
-      completedAt,
-      timeTakenSeconds,
-    })
+    // API-sourced tests expose no correct answers (verified server-side). Route
+    // them through POST /api/tests/:slug/answers and visualize the reveal.
+    const usesServerVerification = questions.some((q) => !q.correctOptionId)
 
-    questions.forEach((question, index) => {
-      const answer = attempt.answers[question.id]
-      if (!answer?.selectedOptionId) return
+    set({ isSubmitting: true, submitError: null })
+    try {
+      let result: TestResult
 
-      if (answer.selectedOptionId === question.correctOptionId) {
-        mistakeRepository.recordCorrect(activeTest.id, question.id)
-        return
+      if (usesServerVerification) {
+        const submission = {
+          answers: questions
+            .filter((q) => attempt.answers[q.id]?.selectedOptionId)
+            .map((q) => ({ questionId: q.id, optionIds: [attempt.answers[q.id].selectedOptionId as string] })),
+        }
+        const verification = await testsApi.verifyAnswers(activeTest.slug, submission)
+        result = mapVerificationToTestResult({
+          verification,
+          test: activeTest,
+          answers: attempt.answers,
+          startedAt: attempt.startedAt,
+          completedAt,
+          timeTakenSeconds,
+        })
+
+        // Record mistakes from the authoritative reveal.
+        const indexById = new Map(questions.map((q, i) => [q.id, i + 1]))
+        for (const r of verification.results) {
+          const selected = attempt.answers[r.questionId]?.selectedOptionId
+          if (r.correct) {
+            mistakeRepository.recordCorrect(activeTest.id, r.questionId)
+            continue
+          }
+          if (!selected) continue
+          mistakeRepository.recordIncorrect({
+            questionId: r.questionId,
+            testId: activeTest.id,
+            testSlug: activeTest.slug,
+            testTitle: activeTest.title,
+            selectedOptionId: selected,
+            correctOptionId: r.correctOptionIds[0] ?? '',
+            attemptId: attempt.id,
+            questionNumber: indexById.get(r.questionId) ?? 0,
+            topic: questions.find((q) => q.id === r.questionId)?.topic,
+            difficulty: questions.find((q) => q.id === r.questionId)?.difficulty,
+          })
+        }
+      } else {
+        // Custom / local tests still carry correctOptionId — score locally.
+        result = calculateTestResult({
+          attemptId: attempt.id,
+          test: activeTest,
+          questions,
+          answers: attempt.answers,
+          startedAt: attempt.startedAt,
+          completedAt,
+          timeTakenSeconds,
+        })
+
+        questions.forEach((question, index) => {
+          const answer = attempt.answers[question.id]
+          if (!answer?.selectedOptionId) return
+          if (answer.selectedOptionId === question.correctOptionId) {
+            mistakeRepository.recordCorrect(activeTest.id, question.id)
+            return
+          }
+          mistakeRepository.recordIncorrect({
+            questionId: question.id,
+            testId: activeTest.id,
+            testSlug: activeTest.slug,
+            testTitle: activeTest.title,
+            selectedOptionId: answer.selectedOptionId,
+            correctOptionId: question.correctOptionId,
+            attemptId: attempt.id,
+            questionNumber: index + 1,
+            topic: question.topic,
+            difficulty: question.difficulty,
+          })
+        })
       }
 
-      mistakeRepository.recordIncorrect({
-        questionId: question.id,
-        testId: activeTest.id,
-        testSlug: activeTest.slug,
-        testTitle: activeTest.title,
-        selectedOptionId: answer.selectedOptionId,
-        correctOptionId: question.correctOptionId,
-        attemptId: attempt.id,
-        questionNumber: index + 1,
-        topic: question.topic,
-        difficulty: question.difficulty,
+      const completedAttempt: TestAttempt = {
+        ...attempt,
+        status: 'completed',
+        completedAt,
+      }
+
+      StorageService.removeItem(APP_CONFIG.storageKeys.activeAttempt)
+      StorageService.removeItem(APP_CONFIG.storageKeys.activeQuestions)
+
+      set({
+        attempt: completedAttempt,
+        lastCompletedResult: result,
+        isSubmitting: false,
       })
-    })
 
-    const completedAttempt: TestAttempt = {
-      ...attempt,
-      status: 'completed',
-      completedAt,
+      return result
+    } catch (err) {
+      // Online-only: surface a connection error rather than a fake offline result.
+      const message =
+        err instanceof ApiClientError && err.status === 0
+          ? 'Connection error — could not verify your answers. Please check your network and retry.'
+          : 'Could not submit your answers. Please retry.'
+      set({ isSubmitting: false, submitError: message })
+      return null
     }
-
-    StorageService.removeItem(APP_CONFIG.storageKeys.activeAttempt)
-    StorageService.removeItem(APP_CONFIG.storageKeys.activeQuestions)
-
-    set({
-      attempt: completedAttempt,
-      lastCompletedResult: result,
-      isSubmitting: false,
-    })
-
-    return result
   },
 
   resetQuizSession: () => {

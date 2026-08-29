@@ -1,0 +1,8 @@
+{
+  "id": "topic_sorting",
+  "slug": "sorting",
+  "name": "Sorting",
+  "description": "Comparison and divide-and-conquer sorting algorithms.",
+  "categorySlug": "algorithms",
+  "original": true
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   ArrowRight,
@@ -83,8 +83,9 @@ export const HomePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [hasLoadError, setHasLoadError] = useState(false)
 
-  useEffect(() => {
+  const loadHome = useCallback(() => {
     setHasLoadError(false)
+    setIsLoading(true)
     testRepository.getAllTests()
       .then((tests) => {
         setAllTests(tests)
@@ -93,6 +94,10 @@ export const HomePage: React.FC = () => {
       .catch(() => setHasLoadError(true))
       .finally(() => setIsLoading(false))
   }, [])
+
+  useEffect(() => {
+    loadHome()
+  }, [loadHome])
 
   const languageGroups = useMemo(() => {
     const map = new Map<string, Test[]>()
@@ -295,7 +300,7 @@ export const HomePage: React.FC = () => {
         </div>
 
         {hasLoadError ? (
-          <ErrorState message="The test catalog could not be loaded." onRetry={() => window.location.reload()} />
+          <ErrorState message="The test catalog could not be loaded." onRetry={loadHome} />
         ) : isLoading ? (
           <div className="rounded-2xl border border-dashed border-surface-300 p-8 text-center text-sm text-surface-500 dark:border-surface-700 dark:text-surface-400">
             Loading tests...

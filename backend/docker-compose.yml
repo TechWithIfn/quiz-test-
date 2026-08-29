@@ -1,0 +1,55 @@
+# Local development only. Free, self-hosted, no paid services, no Redis.
+#
+# Usage:
+#   docker compose up --build        # start Postgres + backend (runs migrations via the
+#                                    # entrypoint step below if you enable it)
+#   docker compose down              # stop; the database volume is PRESERVED
+#   docker compose down -v          # DESTROYS the database volume (irreversible)
+#
+# The backend waits for Postgres to be healthy before starting (depends_on +
+# condition: service_healthy). To apply migrations on a fresh database:
+#   docker compose run --rm backend npx prisma migrate deploy
+#   docker compose run --rm backend npm run content:import   # optional seed
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: quizflow
+      POSTGRES_PASSWORD: quizflow
+      POSTGRES_DB: quizflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U quizflow -d quizflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      # Resolved inside the compose network; never hardcode real credentials.
+      DATABASE_URL: postgresql://quizflow:quizflow@db:5432/quizflow?schema=public
+      API_BASE_URL: http://localhost:3001
+      CORS_ORIGINS: http://localhost:5173,http://localhost:4173
+      CONTENT_VERSION: "1.0.0"
+      RATE_LIMIT_MAX: "300"
+      RATE_LIMIT_WINDOW_MS: "60000"
+    ports:
+      - "3001:3001"
+
+volumes:
+  # Named volume: survives `docker compose down`. Only `down -v` removes it.
+  pgdata:

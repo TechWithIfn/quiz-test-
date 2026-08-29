@@ -37,7 +37,7 @@ describe('Quiz Store State Machine', () => {
     expect(mistakeRepository.getAll()).toHaveLength(0)
   })
 
-  it('records only the final wrong answer when submitted', () => {
+  it('records only the final wrong answer when submitted', async () => {
     const store = useQuizStore.getState()
     store.startTest(testItem, questions)
 
@@ -45,14 +45,14 @@ describe('Quiz Store State Machine', () => {
     const wrongOptions = q1.options.filter((option) => option.id !== q1.correctOptionId)
     store.selectOption(q1.id, wrongOptions[0].id)
     store.selectOption(q1.id, wrongOptions[1]?.id || wrongOptions[0].id)
-    store.submitTest()
+    await store.submitTest()
 
     const mistakes = mistakeRepository.getAll().filter((mistake) => mistake.questionId === q1.id)
     expect(mistakes).toHaveLength(1)
     expect(mistakes[0].selectedOptionId).toBe(wrongOptions[1]?.id || wrongOptions[0].id)
   })
 
-  it('does not record a mistake when a wrong answer is changed to correct', () => {
+  it('does not record a mistake when a wrong answer is changed to correct', async () => {
     const store = useQuizStore.getState()
     store.startTest(testItem, questions)
 
@@ -60,39 +60,39 @@ describe('Quiz Store State Machine', () => {
     const wrongOption = q1.options.find((option) => option.id !== q1.correctOptionId)!
     store.selectOption(q1.id, wrongOption.id)
     store.selectOption(q1.id, q1.correctOptionId)
-    store.submitTest()
+    await store.submitTest()
 
     expect(mistakeRepository.getAll()).toHaveLength(0)
   })
 
-  it('keeps mistakes from separate attempts separate', () => {
+  it('keeps mistakes from separate attempts separate', async () => {
     const q1 = questions[0]
     const wrongOption = q1.options.find((option) => option.id !== q1.correctOptionId)!
 
     useQuizStore.getState().startTest(testItem, questions)
     useQuizStore.getState().selectOption(q1.id, wrongOption.id)
-    useQuizStore.getState().submitTest()
+    await useQuizStore.getState().submitTest()
 
     useQuizStore.getState().startTest(testItem, questions)
     useQuizStore.getState().selectOption(q1.id, wrongOption.id)
-    useQuizStore.getState().submitTest()
+    await useQuizStore.getState().submitTest()
 
     const mistakes = mistakeRepository.getAll().filter((mistake) => mistake.questionId === q1.id)
     expect(mistakes).toHaveLength(2)
     expect(new Set(mistakes.map((mistake) => mistake.attemptId)).size).toBe(2)
   })
 
-  it('marks a previous mistake improved when a later attempt is correct', () => {
+  it('marks a previous mistake improved when a later attempt is correct', async () => {
     const q1 = questions[0]
     const wrongOption = q1.options.find((option) => option.id !== q1.correctOptionId)!
 
     useQuizStore.getState().startTest(testItem, questions)
     useQuizStore.getState().selectOption(q1.id, wrongOption.id)
-    useQuizStore.getState().submitTest()
+    await useQuizStore.getState().submitTest()
 
     useQuizStore.getState().startTest(testItem, questions)
     useQuizStore.getState().selectOption(q1.id, q1.correctOptionId)
-    useQuizStore.getState().submitTest()
+    await useQuizStore.getState().submitTest()
 
     const mistakes = mistakeRepository.getAll().filter((mistake) => mistake.questionId === q1.id)
     expect(mistakes).toHaveLength(1)
@@ -126,7 +126,7 @@ describe('Quiz Store State Machine', () => {
     expect(useQuizStore.getState().attempt?.answers[q1.id].isMarkedForReview).toBe(false)
   })
 
-  it('submits quiz and computes result', () => {
+  it('submits quiz and computes result', async () => {
     const store = useQuizStore.getState()
     store.startTest(testItem, questions)
 
@@ -134,7 +134,7 @@ describe('Quiz Store State Machine', () => {
     const q1 = questions[0]
     store.selectOption(q1.id, q1.correctOptionId)
 
-    const result = store.submitTest()
+    const result = await store.submitTest()
     expect(result).not.toBeNull()
     expect(result?.totalQuestions).toBe(questions.length)
     expect(result?.correctAnswers).toBeGreaterThanOrEqual(1)

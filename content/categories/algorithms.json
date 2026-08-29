@@ -1,0 +1,8 @@
+{
+  "id": "cat_algorithms",
+  "slug": "algorithms",
+  "name": "Algorithms",
+  "description": "Fundamental algorithms and data structures.",
+  "icon": "cpu",
+  "color": "#2563eb"
+}

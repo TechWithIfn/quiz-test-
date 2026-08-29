@@ -1,0 +1,16 @@
+{
+  "id": "q_sort_quick",
+  "type": "multiple-choice",
+  "question": "Which of the following are true about quicksort?",
+  "options": [
+    { "id": "a", "text": "It is a divide-and-conquer algorithm", "correct": true },
+    { "id": "b", "text": "Its worst case is O(n^2)", "correct": true },
+    { "id": "c", "text": "It always requires O(n) extra space", "correct": false }
+  ],
+  "explanation": "Quicksort is divide-and-conquer; its worst case is O(n^2) on already-sorted input, and it is in-place (only O(log n) call-stack space).",
+  "difficulty": "intermediate",
+  "topicSlug": "sorting",
+  "points": 2,
+  "tags": ["sorting"],
+  "original": true
+}

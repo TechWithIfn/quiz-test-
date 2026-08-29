@@ -25,6 +25,7 @@ import { formatFriendlyDuration } from '@/utils/time'
 import { cn } from '@/utils/cn'
 import { applyTestSeoMetadata } from '@/utils/seo'
 import { ErrorState } from '@/components/ui/ErrorState'
+import { TestDetailSkeleton } from '@/components/ui/Skeletons'
 
 export const TestDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>()
@@ -61,11 +62,7 @@ export const TestDetailPage: React.FC = () => {
   }, [test])
 
   if (isLoading) {
-    return (
-      <div className="max-w-4xl mx-auto px-4 py-20 text-center text-surface-400" role="status">
-        <div className="inline-block animate-pulse text-sm">Loading test details...</div>
-      </div>
-    )
+    return <TestDetailSkeleton />
   }
 
   if (hasLoadError) {

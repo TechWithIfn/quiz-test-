@@ -4,11 +4,11 @@ import { MainLayout } from '@/layouts/MainLayout'
 
 // Critical Path Pages (Direct / Eager for instantaneous landing & search)
 import { HomePage } from '@/pages/HomePage'
-import { TestsCatalogPage } from '@/pages/TestsCatalogPage'
-import { TestDetailPage } from '@/pages/TestDetailPage'
-import { CategoryPage } from '@/pages/CategoryPage'
 
-// Feature & Secondary Pages (Lazy-loaded chunks)
+// Feature & Secondary Pages (Lazy-loaded chunks to keep the initial bundle small)
+const TestsCatalogPage = lazy(() => import('@/pages/TestsCatalogPage').then(m => ({ default: m.TestsCatalogPage })))
+const TestDetailPage = lazy(() => import('@/pages/TestDetailPage').then(m => ({ default: m.TestDetailPage })))
+const CategoryPage = lazy(() => import('@/pages/CategoryPage').then(m => ({ default: m.CategoryPage })))
 const QuizTakingPage = lazy(() => import('@/pages/QuizTakingPage').then(m => ({ default: m.QuizTakingPage })))
 const QuizResultPage = lazy(() => import('@/pages/QuizResultPage').then(m => ({ default: m.QuizResultPage })))
 const QuizReviewPage = lazy(() => import('@/pages/QuizReviewPage').then(m => ({ default: m.QuizReviewPage })))

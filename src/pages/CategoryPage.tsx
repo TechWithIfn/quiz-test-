@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { AlertCircle, BookOpen, ChevronRight, Layers } from 'lucide-react'
 import { testRepository } from '@/services/test.service'
 import { Test, TestCategory } from '@/types'
 import { TestCard } from '@/features/tests/TestCard'
+import { ErrorState } from '@/components/ui/ErrorState'
 import { applyCategorySeoMetadata, applyStaticPageSeoMetadata } from '@/utils/seo'
 
 export const CategoryPage: React.FC = () => {
@@ -12,20 +13,29 @@ export const CategoryPage: React.FC = () => {
   const [categories, setCategories] = useState<TestCategory[]>([])
   const [allTests, setAllTests] = useState<Test[]>([])
   const [notFound, setNotFound] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [hasError, setHasError] = useState(false)
 
-  useEffect(() => {
+  const loadCategories = useCallback(() => {
     let isMounted = true
-    Promise.all([testRepository.getCategories(), testRepository.getAllTests()]).then(
-      ([cats, tests]) => {
+    setIsLoading(true)
+    setHasError(false)
+    Promise.all([testRepository.getCategories(), testRepository.getAllTests()])
+      .then(([cats, tests]) => {
         if (!isMounted) return
         setCategories(cats)
         setAllTests(tests)
-      }
-    )
+      })
+      .catch(() => isMounted && setHasError(true))
+      .finally(() => isMounted && setIsLoading(false))
     return () => {
       isMounted = false
     }
   }, [])
+
+  useEffect(() => {
+    return loadCategories()
+  }, [loadCategories])
 
   const category = slug ? categories.find((cat) => cat.slug === slug) : undefined
 
@@ -48,6 +58,25 @@ export const CategoryPage: React.FC = () => {
       setNotFound(true)
     }
   }, [slug, category, categories, allTests])
+
+  if (hasError) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-16 text-center">
+        <ErrorState
+          message="The categories could not be loaded."
+          onRetry={loadCategories}
+        />
+      </div>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <div className="mx-auto max-w-6xl px-4 py-16 text-center text-surface-400" role="status">
+        <div className="inline-block animate-pulse text-sm">Loading categories…</div>
+      </div>
+    )
+  }
 
   if (slug && notFound) {
     return (

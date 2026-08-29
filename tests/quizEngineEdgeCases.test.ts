@@ -123,12 +123,12 @@ describe('Deep Technical Audit: 22 Edge Cases in Quiz Engine', () => {
   })
 
   // 5. Submit with unanswered questions
-  it('Edge Case 5: Submit with unanswered questions awards 0 points to unanswered items', () => {
+  it('Edge Case 5: Submit with unanswered questions awards 0 points to unanswered items', async () => {
     useQuizStore.getState().startTest(sampleTest, sampleQuestions)
     useQuizStore.getState().selectOption('q-1', 'opt-1a') // 2 pts
     // q-2 and q-3 left unanswered (0 pts)
 
-    const result = useQuizStore.getState().submitTest()
+    const result = await useQuizStore.getState().submitTest()
     expect(result).not.toBeNull()
     expect(result?.totalQuestions).toBe(3)
     expect(result?.answeredQuestions).toBe(1)
@@ -140,9 +140,9 @@ describe('Deep Technical Audit: 22 Edge Cases in Quiz Engine', () => {
   })
 
   // 6. Submit immediately
-  it('Edge Case 6: Immediate submission with zero answers calculates 0% score safely', () => {
+  it('Edge Case 6: Immediate submission with zero answers calculates 0% score safely', async () => {
     useQuizStore.getState().startTest(sampleTest, sampleQuestions)
-    const result = useQuizStore.getState().submitTest()
+    const result = await useQuizStore.getState().submitTest()
     expect(result?.scorePercentage).toBe(0)
     expect(result?.answeredQuestions).toBe(0)
     expect(result?.unansweredQuestions).toBe(3)
@@ -278,7 +278,7 @@ describe('Deep Technical Audit: 22 Edge Cases in Quiz Engine', () => {
   })
 
   // 15 & 16. Very long question and very long option text
-  it('Edge Case 15 & 16: Evaluates very long question prompts and option strings cleanly', () => {
+  it('Edge Case 15 & 16: Evaluates very long question prompts and option strings cleanly', async () => {
     const hugeText = 'A'.repeat(5000)
     const longQuestion: Question = {
       id: 'q-long',
@@ -298,7 +298,7 @@ describe('Deep Technical Audit: 22 Edge Cases in Quiz Engine', () => {
 
     useQuizStore.getState().startTest(sampleTest, [longQuestion])
     useQuizStore.getState().selectOption('q-long', 'opt-long-1')
-    const result = useQuizStore.getState().submitTest()
+    const result = await useQuizStore.getState().submitTest()
     expect(result?.scorePercentage).toBe(100)
     expect(result?.correctAnswers).toBe(1)
   })
@@ -337,11 +337,11 @@ describe('Deep Technical Audit: 22 Edge Cases in Quiz Engine', () => {
   })
 
   // 19. Repeated attempts & idempotent submission
-  it('Edge Case 19: Double submission is idempotent and prevents stale mutation', () => {
+  it('Edge Case 19: Double submission is idempotent and prevents stale mutation', async () => {
     useQuizStore.getState().startTest(sampleTest, sampleQuestions)
     useQuizStore.getState().selectOption('q-1', 'opt-1a')
-    const firstResult = useQuizStore.getState().submitTest()
-    const secondResult = useQuizStore.getState().submitTest()
+    const firstResult = await useQuizStore.getState().submitTest()
+    const secondResult = await useQuizStore.getState().submitTest()
 
     expect(firstResult).not.toBeNull()
     expect(secondResult).toBeNull() // Already completed, no double-write
@@ -364,12 +364,12 @@ describe('Deep Technical Audit: 22 Edge Cases in Quiz Engine', () => {
   })
 
   // 22. Mistake recording and retry tracking
-  it('Edge Case 22: Records incorrect mistakes on submission and increments correctRetryCount on mastery', () => {
+  it('Edge Case 22: Records incorrect mistakes on submission and increments correctRetryCount on mastery', async () => {
     useQuizStore.getState().startTest(sampleTest, sampleQuestions)
     useQuizStore.getState().selectOption('q-1', 'opt-1b') // Wrong (correct is opt-1a)
     useQuizStore.getState().selectOption('q-2', 'opt-2b') // Correct
 
-    useQuizStore.getState().submitTest()
+    await useQuizStore.getState().submitTest()
 
     const recorded = mistakeRepository.getAll()
     expect(recorded.length).toBe(1)

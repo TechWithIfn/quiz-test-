@@ -1,6 +1,7 @@
 import { Question, Test, TestCategory } from '@/types'
 import { contentService, ContentService } from './content.service'
 import { customTestRepository } from './custom-test.service'
+import { ApiTestRepository } from './api-test.repository'
 
 /**
  * Abstract Test Repository interface.
@@ -59,5 +60,6 @@ export class StaticContentTestRepository implements ITestRepository {
   }
 }
 
-// Singleton repository instance
-export const testRepository: ITestRepository = new StaticContentTestRepository()
+// Singleton repository instance. The production app is now backed by the API
+// (online-only); static file content is kept available for unit tests / dev tools.
+export const testRepository: ITestRepository = new ApiTestRepository()

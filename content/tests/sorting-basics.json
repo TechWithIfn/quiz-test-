@@ -1,0 +1,20 @@
+{
+  "id": "test_sorting_basics",
+  "slug": "sorting-basics",
+  "title": "Sorting Basics",
+  "shortDescription": "A short intro to sorting algorithms.",
+  "description": "Practice merge sort and quicksort with original concept questions.",
+  "difficulty": "beginner",
+  "categorySlug": "algorithms",
+  "questionIds": ["q_sort_merge", "q_sort_quick"],
+  "tags": ["sorting"],
+  "status": "published",
+  "version": "1.0.0",
+  "estimatedMinutes": 10,
+  "featured": true,
+  "passingScorePercentage": 70,
+  "seoTitle": "Sorting Basics Practice Test",
+  "seoDescription": "Test your understanding of merge sort and quicksort.",
+  "canonicalPath": "/tests/sorting-basics",
+  "original": true
+}
