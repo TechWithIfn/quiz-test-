@@ -1,4 +1,4 @@
-import { buildApp } from '../../backend/dist/app.js'
+import { buildApp } from '../backend/dist/app.js'
 import awsLambdaFastify from '@fastify/aws-lambda'
 
 let handlerPromise
