@@ -28,6 +28,6 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './tests/setup.ts',
-    exclude: ['**/node_modules/**', '**/dist/**', '**/backend/**'],
+    exclude: ['**/node_modules/**', '**/dist/**'],
   },
 })
