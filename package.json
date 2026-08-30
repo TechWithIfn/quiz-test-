@@ -6,23 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "node scripts/generate-sitemap.mjs && tsc && vite build",
-    "build:vercel": "npm run build:backend && npm --prefix backend prune --omit=dev && npm run build",
-    "vercel:migrate": "npm --prefix backend run db:deploy",
     "preview": "vite preview",
     "test": "vitest run",
     "validate:content": "node scripts/validate-content.mjs",
     "audit:content": "node scripts/audit-content.mjs",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit",
-    "dev:backend": "npm --prefix ../backend run dev",
-    "build:backend": "npm --prefix ../backend run build",
-    "typecheck:backend": "npm --prefix ../backend run typecheck",
-    "test:backend": "npm --prefix ../backend run test"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@fastify/aws-lambda": "^3.2.0",
-    "@prisma/client": "^7.10.0",
-    "aws-lambda": "^1.0.7",
     "clsx": "^2.1.1",
     "katex": "^0.18.4",
     "lucide-react": "^1.16.0",

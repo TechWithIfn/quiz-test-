@@ -1,15 +1,8 @@
 {
   "version": 2,
-  "installCommand": "npm install --include=dev && npm --prefix backend install --include=dev && npm --prefix backend run db:generate",
-  "buildCommand": "npm run build:vercel",
+  "installCommand": "npm install --include=dev",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "functions": {
-    "api/[[...path]].ts": {
-      "memory": 1024,
-      "maxDuration": 30,
-      "includeFiles": "../backend/dist/**"
-    }
-  },
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
